@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:gerenciador_de_custos/pages/alimentacao_page.dart';
+import 'package:get/get.dart';
 
-class HomePage extends StatelessWidget {
+import '../controller/alimentacao_controller.dart';
+
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(241, 250, 238, 1.0),
       appBar: AppBar(
-        
+
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -44,7 +53,9 @@ class HomePage extends StatelessWidget {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               fixedSize: Size.fromWidth(310),
               backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
-            ), onPressed: (){},icon: Icon(Icons.fastfood, color: Colors.black,size: 35,),label: Text('Alimentação', style: TextStyle(fontSize: 40, color: Colors.black),),),
+            ), onPressed: (){
+              Get.to(AlimentacaoPage());
+            },icon: Icon(Icons.fastfood, color: Colors.black,size: 35,),label: Text('Alimentação', style: TextStyle(fontSize: 40, color: Colors.black),),),
             SizedBox(height: 20,),
             ElevatedButton.icon(
               style:ElevatedButton.styleFrom(
