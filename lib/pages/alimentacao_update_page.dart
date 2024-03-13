@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_custos/controller/alimentacao_controller.dart';
-import 'package:gerenciador_de_custos/pages/alimentacao_page.dart';
 import 'package:get/get.dart';
 
-class AddAlimentacao extends StatefulWidget {
-  const AddAlimentacao({super.key});
+import '../model/alimentacao/alimentacao.dart';
+import 'alimentacao_page.dart';
+
+class UpdateAlimentacao extends StatefulWidget {
+  final Alimentacao alimentacao;
+
+  const UpdateAlimentacao({super.key, required this.alimentacao});
 
   @override
-  State<AddAlimentacao> createState() => _AddAlimentacaoState();
+  State<UpdateAlimentacao> createState() => _UpdateAlimentacaoState();
 }
 
-class _AddAlimentacaoState extends State<AddAlimentacao> {
+class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AlimentacaoController>(builder: (ctrl) {
+      ctrl.alimentacaoDataCtrl.text = widget.alimentacao.data ?? '';
+      ctrl.alimentacaoNomeCtrl.text = widget.alimentacao.nome ?? '';
+      ctrl.alimentacaoPrecoCtrl.text = widget.alimentacao.preco?.toStringAsFixed(2) ?? '';
+
       return Scaffold(
         backgroundColor: Color.fromRGBO(241, 250, 238, 1.0),
         appBar: AppBar(
@@ -72,10 +80,16 @@ class _AddAlimentacaoState extends State<AddAlimentacao> {
                   backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
                   foregroundColor: Colors.black,
                 ), onPressed: () {
-                  ctrl.addAlimentacao();
+                  ctrl.updateAlimentacao(widget.alimentacao.id);
                   ctrl.fetchAlimentacao();
-                  //Get.off(AlimentacaoPage());
-                }, child: Text('Adicionar', style: TextStyle(fontSize: 24),))
+
+                  //Necessário limpar o ctrl, pois se tentar adicionar uma nova despesa os valores antigos aparecem direto na tela
+                  ctrl.alimentacaoDataCtrl.clear();
+                  ctrl.alimentacaoNomeCtrl.clear();
+                  ctrl.alimentacaoPrecoCtrl.clear();
+
+                  Get.off(AlimentacaoPage());
+                }, child: Text('Atualizar', style: TextStyle(fontSize: 24),))
               ],
             ),
           ),

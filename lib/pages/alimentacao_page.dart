@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_custos/controller/alimentacao_controller.dart';
 import 'package:gerenciador_de_custos/pages/alimentacao_add_page.dart';
+import 'package:gerenciador_de_custos/pages/alimentacao_update_page.dart';
 import 'package:get/get.dart';
 
 class AlimentacaoPage extends StatefulWidget {
@@ -62,7 +63,9 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                           Text(ctrl.alimentacaoList[index].nome?.toUpperCase() ?? ''),
                           Row(
                             children: [
-                              IconButton(onPressed: (){}, icon: Icon(Icons.edit)),
+                              IconButton(onPressed: (){
+                                Get.to(UpdateAlimentacao(alimentacao: ctrl.alimentacaoList[index],));
+                              }, icon: Icon(Icons.edit)),
                               IconButton(onPressed: (){
                                 ctrl.deleteAlimentacao(ctrl.alimentacaoList[index].id ?? '');
 

@@ -38,6 +38,7 @@ addAlimentacao(){
     Get.snackbar('Sucess', 'Product added successfully', colorText: Colors.green);
 
     setValuesDefault();
+
   } catch (e) {
     Get.snackbar('Error', e.toString(), colorText: Colors.red);
   }
@@ -61,6 +62,27 @@ fetchAlimentacao() async{
       update();
     }
 }
+
+  updateAlimentacao(String? id) async {
+
+    try {
+      DocumentReference doc = alimentacaoCollection.doc(id);
+      Alimentacao alimentacao = Alimentacao(
+        id: id,
+        data: alimentacaoDataCtrl.text,
+        nome: alimentacaoNomeCtrl.text,
+        preco: double.tryParse(alimentacaoPrecoCtrl.text),
+      );
+
+      final alimentacaoJson = alimentacao.toJson();
+      doc.update(alimentacaoJson);
+      Get.snackbar('Sucess', 'Product updated successfully', colorText: Colors.green);
+
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), colorText: Colors.red);
+    }
+  }
+
 
 deleteAlimentacao(String id) async{
   try{
