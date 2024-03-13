@@ -39,7 +39,10 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                     foregroundColor: Colors.black,
                   ),
                   onPressed: () {
-                    Get.to(AddAlimentacao());
+                    ctrl.alimentacaoDataCtrl.clear();
+                    ctrl.alimentacaoNomeCtrl.clear();
+                    ctrl.alimentacaoPrecoCtrl.clear();
+                    Get.off(AddAlimentacao());
                   },
                   child: const Text(
                     'Adicionar despesa', style: TextStyle(fontSize: 24),))
@@ -64,7 +67,7 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                           Row(
                             children: [
                               IconButton(onPressed: (){
-                                Get.to(UpdateAlimentacao(alimentacao: ctrl.alimentacaoList[index],));
+                                Get.off(UpdateAlimentacao(alimentacao: ctrl.alimentacaoList[index],));
                               }, icon: Icon(Icons.edit)),
                               IconButton(onPressed: (){
                                 ctrl.deleteAlimentacao(ctrl.alimentacaoList[index].id ?? '');

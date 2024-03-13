@@ -74,7 +74,7 @@ class _AddAlimentacaoState extends State<AddAlimentacao> {
                 ), onPressed: () {
                   ctrl.addAlimentacao();
                   ctrl.fetchAlimentacao();
-                  //Get.off(AlimentacaoPage());
+                  Get.off(AlimentacaoPage());
                 }, child: Text('Adicionar', style: TextStyle(fontSize: 24),))
               ],
             ),
