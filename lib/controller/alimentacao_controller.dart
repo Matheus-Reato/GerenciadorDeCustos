@@ -23,15 +23,25 @@ class AlimentacaoController extends GetxController{
     super.onInit();
   }
 
-// addAlimentacao(){
-//   DocumentReference doc = alimentacaoCollection.doc();
-//   Alimentacao alimentacao = Alimentacao(
-//     id: doc.id,
-//     nome: alimentacaoNomeCtrl.text,
-//     preco: double.tryParse(alimentacaoPrecoCtrl.text),
-//     data: alimentacaoDataCtrl.text,
-//   );
-// }
+addAlimentacao(){
+  try {
+    DocumentReference doc = alimentacaoCollection.doc();
+    Alimentacao alimentacao = Alimentacao(
+      id: doc.id,
+      data: alimentacaoDataCtrl.text,
+      nome: alimentacaoNomeCtrl.text,
+      preco: double.tryParse(alimentacaoPrecoCtrl.text),
+    );
+
+    final alimentacaoJson = alimentacao.toJson();
+    doc.set(alimentacaoJson);
+    Get.snackbar('Sucess', 'Product added successfully', colorText: Colors.green);
+
+    setValuesDefault();
+  } catch (e) {
+    Get.snackbar('Error', e.toString(), colorText: Colors.red);
+  }
+}
 
 fetchAlimentacao() async{
     try{
@@ -43,7 +53,7 @@ fetchAlimentacao() async{
       alimentacaoList.clear();
       alimentacaoList.assignAll(retrievedAlimentacao);
 
-      Get.snackbar('Sucess', 'Product fetch successfully', colorText: Colors.green);
+      //Get.snackbar('Sucess', 'Product fetch successfully', colorText: Colors.green);
 
     } catch(e){
       Get.snackbar('Error', e.toString(), colorText: Colors.red);
@@ -51,4 +61,22 @@ fetchAlimentacao() async{
       update();
     }
 }
+
+deleteAlimentacao(String id) async{
+  try{
+    await alimentacaoCollection.doc(id).delete();
+    fetchAlimentacao();
+  } catch (e){
+    Get.snackbar('Error', e.toString(), colorText: Colors.red);
+  }
+
+}
+
+  setValuesDefault(){
+    alimentacaoDataCtrl.clear();
+    alimentacaoNomeCtrl.clear();
+    alimentacaoPrecoCtrl.clear();
+
+    update();
+  }
 }

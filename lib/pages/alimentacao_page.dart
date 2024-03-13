@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_custos/controller/alimentacao_controller.dart';
+import 'package:gerenciador_de_custos/pages/alimentacao_add_page.dart';
 import 'package:get/get.dart';
 
 class AlimentacaoPage extends StatefulWidget {
@@ -36,16 +37,54 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                     backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
                     foregroundColor: Colors.black,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(AddAlimentacao());
+                  },
                   child: const Text(
                     'Adicionar despesa', style: TextStyle(fontSize: 24),))
             ],
           ),
         ),
         body: ListView.builder(itemCount: ctrl.alimentacaoList.length,itemBuilder: (context, index){
-          return ListTile(
-            title: Text(ctrl.alimentacaoList[index].nome ?? ''),
-            subtitle: Text((ctrl.alimentacaoList[index].preco ?? 0).toString()),
+          return Container(
+            height: 85,
+            child: Card(
+
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0,right: 8.0, bottom: 8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(ctrl.alimentacaoList[index].nome?.toUpperCase() ?? ''),
+                          Row(
+                            children: [
+                              IconButton(onPressed: (){}, icon: Icon(Icons.edit)),
+                              IconButton(onPressed: (){
+                                ctrl.deleteAlimentacao(ctrl.alimentacaoList[index].id ?? '');
+
+                              }, icon: Icon(Icons.delete)),
+                            ],
+                          ),
+
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('R\$ ${ctrl.alimentacaoList[index].preco ?? 0}'),
+                          Text(ctrl.alimentacaoList[index].data ?? ''),
+                        ],
+                      ),
+
+                  ],
+                ),
+              ),
+
+            ),
           );
 
         })
