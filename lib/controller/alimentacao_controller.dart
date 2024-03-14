@@ -63,7 +63,24 @@ fetchAlimentacao() async{
     }
 }
 
-  updateAlimentacao(String? id) async {
+  Future<double> buscaGasto() async {
+  double gastoTotal = 0.0;
+  final userDocRef = firestore.collection('usuario').doc('OhiJeZfpyl76qvqcyRtl');
+  final QuerySnapshot alimentacaoSnapshot = await userDocRef.collection('alimentacao').get();
+
+  final List<Alimentacao> retrievedAlimentacao =alimentacaoSnapshot.docs.map((doc) => Alimentacao.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+  alimentacaoList.clear();
+  alimentacaoList.assignAll(retrievedAlimentacao);
+
+  for(int i = 0; i < alimentacaoList.length; i++){
+    gastoTotal += alimentacaoList[i].preco!;
+  }
+
+  return gastoTotal;
+}
+
+updateAlimentacao(String? id) async {
 
     try {
       DocumentReference doc = alimentacaoCollection.doc(id);
@@ -93,6 +110,8 @@ deleteAlimentacao(String id) async{
   }
 
 }
+
+
 
   setValuesDefault(){
     alimentacaoDataCtrl.clear();

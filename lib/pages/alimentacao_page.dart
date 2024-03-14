@@ -23,29 +23,25 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
           title: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 'Alimentação',
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 30,
               ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
-                    foregroundColor: Colors.black,
-                  ),
-                  onPressed: () {
-                    ctrl.alimentacaoDataCtrl.clear();
-                    ctrl.alimentacaoNomeCtrl.clear();
-                    ctrl.alimentacaoPrecoCtrl.clear();
-                    Get.off(AddAlimentacao());
-                  },
-                  child: const Text(
-                    'Adicionar despesa', style: TextStyle(fontSize: 24),))
+              FutureBuilder<double>(
+                future: ctrl.buscaGasto(),
+                builder: (context, snapshot) {
+                    return Text(
+                      'R\$ ${snapshot.data}',
+                      style: TextStyle(fontSize: 30),
+                    );
+                },
+              ),
             ],
           ),
         ),
@@ -67,7 +63,7 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                           Row(
                             children: [
                               IconButton(onPressed: (){
-                                Get.off(UpdateAlimentacao(alimentacao: ctrl.alimentacaoList[index],));
+                                Get.to(UpdateAlimentacao(alimentacao: ctrl.alimentacaoList[index],));
                               }, icon: Icon(Icons.edit)),
                               IconButton(onPressed: (){
                                 ctrl.deleteAlimentacao(ctrl.alimentacaoList[index].id ?? '');
@@ -92,8 +88,10 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
 
             ),
           );
-
-        })
+        }),
+          floatingActionButton: FloatingActionButton(onPressed: (){
+            Get.to(AddAlimentacao());
+          }, child: Icon(Icons.add),),
       );
     });
   }
