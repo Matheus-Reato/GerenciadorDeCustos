@@ -74,7 +74,7 @@ class _AddAlimentacaoState extends State<AddAlimentacao> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Data',
-                    hintText: 'dd/MM/yyyy',
+                    hintText: 'yyyy-MM-dd',
                   ),
                   onTap: () {
                     _selectDate(context);

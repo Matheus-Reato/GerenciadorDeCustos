@@ -8,19 +8,46 @@ import 'alimentacao_page.dart';
 class UpdateAlimentacao extends StatefulWidget {
   final Alimentacao alimentacao;
 
-  const UpdateAlimentacao({super.key, required this.alimentacao});
+
+  UpdateAlimentacao({super.key, required this.alimentacao});
 
   @override
   State<UpdateAlimentacao> createState() => _UpdateAlimentacaoState();
 }
 
 class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
+
+  final AlimentacaoController ctrl = Get.put(AlimentacaoController());
+  @override
+  void initState() {
+    super.initState();
+    // Limpar os controllers quando o widget é inicializado
+    ctrl.dateController.text = widget.alimentacao.data ?? '';
+    ctrl.alimentacaoNomeCtrl.text = widget.alimentacao.nome ?? '';
+    ctrl.alimentacaoPrecoCtrl.text = widget.alimentacao.preco?.toStringAsFixed(2) ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AlimentacaoController>(builder: (ctrl) {
-      ctrl.dateController.text = widget.alimentacao.data ?? '';
-      ctrl.alimentacaoNomeCtrl.text = widget.alimentacao.nome ?? '';
-      ctrl.alimentacaoPrecoCtrl.text = widget.alimentacao.preco?.toStringAsFixed(2) ?? '';
+
+      Future<void> _selectDate(BuildContext context) async {
+        final DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2015, 8),
+          lastDate: DateTime(2101),
+
+        );
+        if (picked != null) {
+
+          setState(() {
+            ctrl.dateController.text =
+            "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+
+          });
+        }
+      }
 
       return Scaffold(
         backgroundColor: Color.fromRGBO(241, 250, 238, 1.0),
@@ -46,15 +73,20 @@ class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
             padding: const EdgeInsets.only(left: 30, right: 30, top: 30),
             child: Column(
               children: [
+
                 TextFormField(
+                  readOnly: true,
                   controller: ctrl.dateController,
                   decoration: InputDecoration(
-                    //icon: Icon(Icons.calendar_month),
-                      border: OutlineInputBorder(),
-                      labelText: 'Data',
-                      hintText: 'dd/MM/yyyy'
+                    border: OutlineInputBorder(),
+                    labelText: 'Data',
+                    hintText: 'yyyy-MM-dd',
                   ),
+                  onTap: () {
+                    _selectDate(context);
+                  },
                 ),
+
                 SizedBox(height: 30,),
                 TextFormField(
                   controller: ctrl.alimentacaoNomeCtrl,
