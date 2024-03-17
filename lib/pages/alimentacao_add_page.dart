@@ -14,6 +14,10 @@ class _AddAlimentacaoState extends State<AddAlimentacao> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AlimentacaoController>(builder: (ctrl) {
+      ctrl.alimentacaoPrecoCtrl.clear();
+      ctrl.alimentacaoNomeCtrl.clear();
+      ctrl.alimentacaoDataCtrl.clear();
+
       return Scaffold(
         backgroundColor: Color.fromRGBO(241, 250, 238, 1.0),
         appBar: AppBar(

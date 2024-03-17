@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 class AlimentacaoPage extends StatefulWidget {
   const AlimentacaoPage({super.key});
 
+  //MaterialPageRoute
+
   @override
   State<AlimentacaoPage> createState() => _AlimentacaoPageState();
 }
@@ -36,62 +38,87 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
               FutureBuilder<double>(
                 future: ctrl.buscaGasto(),
                 builder: (context, snapshot) {
-                    return Text(
-                      'R\$ ${snapshot.data}',
-                      style: TextStyle(fontSize: 30),
-                    );
+                  return Text(
+                    'R\$ ${snapshot.data}',
+                    style: TextStyle(fontSize: 30),
+                  );
                 },
               ),
             ],
           ),
         ),
-        body: ListView.builder(itemCount: ctrl.alimentacaoList.length,itemBuilder: (context, index){
-          return Container(
-            height: 85,
-            child: Card(
-
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0,right: 8.0, bottom: 8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(ctrl.alimentacaoList[index].nome?.toUpperCase() ?? ''),
-                          Row(
+        body: SingleChildScrollView(
+          padding: EdgeInsets.only(bottom: 80.0),
+          child: Column(
+            children: [
+              ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: ctrl.alimentacaoList.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      height: 85,
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 8.0, right: 8.0, bottom: 8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              IconButton(onPressed: (){
-                                Get.to(UpdateAlimentacao(alimentacao: ctrl.alimentacaoList[index],));
-                              }, icon: Icon(Icons.edit)),
-                              IconButton(onPressed: (){
-                                ctrl.deleteAlimentacao(ctrl.alimentacaoList[index].id ?? '');
-
-                              }, icon: Icon(Icons.delete)),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(ctrl.alimentacaoList[index].nome
+                                          ?.toUpperCase() ??
+                                      ''),
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                          onPressed: () {
+                                            Get.to(UpdateAlimentacao(
+                                              alimentacao:
+                                                  ctrl.alimentacaoList[index],
+                                            ));
+                                          },
+                                          icon: Icon(Icons.edit)),
+                                      IconButton(
+                                          onPressed: () {
+                                            ctrl.deleteAlimentacao(ctrl
+                                                    .alimentacaoList[index]
+                                                    .id ??
+                                                '');
+                                          },
+                                          icon: Icon(Icons.delete)),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                      'R\$ ${ctrl.alimentacaoList[index].preco ?? 0}'),
+                                  Text(ctrl.alimentacaoList[index].data ?? ''),
+                                ],
+                              ),
                             ],
                           ),
-
-                        ],
+                        ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('R\$ ${ctrl.alimentacaoList[index].preco ?? 0}'),
-                          Text(ctrl.alimentacaoList[index].data ?? ''),
-                        ],
-                      ),
-
-                  ],
-                ),
-              ),
-
-            ),
-          );
-        }),
-          floatingActionButton: FloatingActionButton(onPressed: (){
+                    );
+                  }),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
             Get.to(AddAlimentacao());
-          }, child: Icon(Icons.add),),
+          },
+          child: Icon(Icons.add),
+        ),
       );
     });
   }

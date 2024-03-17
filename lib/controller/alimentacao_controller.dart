@@ -14,11 +14,14 @@ class AlimentacaoController extends GetxController{
   TextEditingController alimentacaoPrecoCtrl = TextEditingController();
   TextEditingController alimentacaoDataCtrl = TextEditingController();
 
+  TextEditingController alimentacaoSearchCtrl = TextEditingController();
+
 @override
   Future<void> onInit() async{
   //alimentacaoCollection = FirebaseFirestore.instance.collection('alimentacao');
 
   alimentacaoCollection = FirebaseFirestore.instance.collection('usuario').doc('OhiJeZfpyl76qvqcyRtl').collection('alimentacao');
+
   await fetchAlimentacao();
     super.onInit();
   }
@@ -63,7 +66,7 @@ fetchAlimentacao() async{
     }
 }
 
-  Future<double> buscaGasto() async {
+Future<double> buscaGasto() async {
   double gastoTotal = 0.0;
   final userDocRef = firestore.collection('usuario').doc('OhiJeZfpyl76qvqcyRtl');
   final QuerySnapshot alimentacaoSnapshot = await userDocRef.collection('alimentacao').get();
@@ -78,6 +81,27 @@ fetchAlimentacao() async{
   }
 
   return gastoTotal;
+}
+
+buscaPorNome() async{
+  final userDocRef = firestore.collection('usuario').doc('OhiJeZfpyl76qvqcyRtl');
+  final QuerySnapshot alimentacaoSnapshot = await userDocRef.collection('alimentacao').orderBy('nome').get();
+
+  final List<Alimentacao> retrievedAlimentacao =alimentacaoSnapshot.docs.map((doc) => Alimentacao.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+
+  alimentacaoList.clear();
+  alimentacaoList.assignAll(retrievedAlimentacao);
+
+  String termoProcurado = alimentacaoSearchCtrl.text.toLowerCase();
+
+  List<Alimentacao> filtradoPorNome = [];
+  for(int i = 0; i< alimentacaoList.length; i++){
+
+    String? nome = alimentacaoList[i].nome?.toLowerCase();
+    nome?.contains(termoProcurado);
+    filtradoPorNome.assign(nome as Alimentacao);
+  }
 }
 
 updateAlimentacao(String? id) async {

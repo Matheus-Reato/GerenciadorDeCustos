@@ -83,11 +83,6 @@ class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
                   ctrl.updateAlimentacao(widget.alimentacao.id);
                   ctrl.fetchAlimentacao();
 
-                  //Necessário limpar o ctrl, pois se tentar adicionar uma nova despesa os valores antigos aparecem direto na tela
-                  ctrl.alimentacaoDataCtrl.clear();
-                  ctrl.alimentacaoNomeCtrl.clear();
-                  ctrl.alimentacaoPrecoCtrl.clear();
-
                   Get.off(AlimentacaoPage());
                 }, child: Text('Atualizar', style: TextStyle(fontSize: 24),))
               ],
