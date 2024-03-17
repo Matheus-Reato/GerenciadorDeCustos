@@ -18,7 +18,7 @@ class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AlimentacaoController>(builder: (ctrl) {
-      ctrl.alimentacaoDataCtrl.text = widget.alimentacao.data ?? '';
+      ctrl.dateController.text = widget.alimentacao.data ?? '';
       ctrl.alimentacaoNomeCtrl.text = widget.alimentacao.nome ?? '';
       ctrl.alimentacaoPrecoCtrl.text = widget.alimentacao.preco?.toStringAsFixed(2) ?? '';
 
@@ -47,7 +47,7 @@ class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
             child: Column(
               children: [
                 TextFormField(
-                  controller: ctrl.alimentacaoDataCtrl,
+                  controller: ctrl.dateController,
                   decoration: InputDecoration(
                     //icon: Icon(Icons.calendar_month),
                       border: OutlineInputBorder(),

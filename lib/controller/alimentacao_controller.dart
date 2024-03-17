@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../model/alimentacao/alimentacao.dart';
 
@@ -16,6 +17,8 @@ class AlimentacaoController extends GetxController{
 
   TextEditingController alimentacaoSearchCtrl = TextEditingController();
 
+  TextEditingController dateController = TextEditingController();
+
 @override
   Future<void> onInit() async{
   //alimentacaoCollection = FirebaseFirestore.instance.collection('alimentacao');
@@ -28,10 +31,12 @@ class AlimentacaoController extends GetxController{
 
 addAlimentacao(){
   try {
+
+
     DocumentReference doc = alimentacaoCollection.doc();
     Alimentacao alimentacao = Alimentacao(
       id: doc.id,
-      data: alimentacaoDataCtrl.text,
+      data: dateController.text,
       nome: alimentacaoNomeCtrl.text,
       preco: double.tryParse(alimentacaoPrecoCtrl.text),
     );
@@ -56,6 +61,12 @@ fetchAlimentacao() async{
 
       alimentacaoList.clear();
       alimentacaoList.assignAll(retrievedAlimentacao);
+
+      // for(int i = 0; i < alimentacaoList.length; i++){
+      //   DateTime suaData = DateFormat('yyyy-MM-dd').parse(alimentacaoList[i].data.toString());
+      //   String dataFormatada = DateFormat('dd/MM/yyyy').format(suaData);
+      //   alimentacaoList[i].data = dataFormatada;
+      // }
 
       //Get.snackbar('Sucess', 'Product fetch successfully', colorText: Colors.green);
 
@@ -110,7 +121,7 @@ updateAlimentacao(String? id) async {
       DocumentReference doc = alimentacaoCollection.doc(id);
       Alimentacao alimentacao = Alimentacao(
         id: id,
-        data: alimentacaoDataCtrl.text,
+        data: dateController.text,
         nome: alimentacaoNomeCtrl.text,
         preco: double.tryParse(alimentacaoPrecoCtrl.text),
       );
