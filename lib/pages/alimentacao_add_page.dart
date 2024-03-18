@@ -104,10 +104,11 @@ class _AddAlimentacaoState extends State<AddAlimentacao> {
                     backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
                     foregroundColor: Colors.black,
                   ),
-                  onPressed: () {
-                    ctrl.addAlimentacao();
-                    ctrl.fetchAlimentacao();
+                  onPressed: () async {
+                    await ctrl.addAlimentacao();
+                    await ctrl.fetchAlimentacao();
                     Get.off(AlimentacaoPage());
+
                   },
                   child: Text('Adicionar', style: TextStyle(fontSize: 24),),
                 ),

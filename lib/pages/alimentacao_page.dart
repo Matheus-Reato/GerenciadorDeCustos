@@ -17,6 +17,16 @@ class AlimentacaoPage extends StatefulWidget {
 
 class _AlimentacaoPageState extends State<AlimentacaoPage> {
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Executar fetchAlimentacao após o primeiro quadro para garantir que o widget seja construído
+      final ctrl = Get.find<AlimentacaoController>();
+      ctrl.fetchAlimentacao();
+    });
+  }
+
   Map<String, Alimentacao> alimentacaoMap = {};
 
   @override
@@ -44,7 +54,7 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                 future: ctrl.buscaGasto(),
                 builder: (context, snapshot) {
                   return Text(
-                    'R\$ ${snapshot.data}',
+                    'R\$ ${snapshot.data?.toStringAsFixed(2)}',
                     style: TextStyle(fontSize: 30),
                   );
                 },

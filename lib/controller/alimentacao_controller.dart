@@ -21,7 +21,7 @@ class AlimentacaoController extends GetxController{
   TextEditingController dateController = TextEditingController();
 
 @override
-  Future<void> onInit() async{
+  Future<void> onInit() async {
   //alimentacaoCollection = FirebaseFirestore.instance.collection('alimentacao');
 
   alimentacaoCollection = FirebaseFirestore.instance.collection('usuario').doc('OhiJeZfpyl76qvqcyRtl').collection('alimentacao');
@@ -61,9 +61,9 @@ fetchAlimentacao() async{
       final List<Alimentacao> retrievedAlimentacao =alimentacaoSnapshot.docs.map((doc) => Alimentacao.fromJson(doc.data() as Map<String, dynamic>)).toList();
 
       alimentacaoList.clear();
-      alimentacaoList.assignAll(retrievedAlimentacao);
+      alimentacaoList.addAll(retrievedAlimentacao);
 
-      alimentacaoList.sort((a, b) => (b.data ?? '').compareTo(a.data ?? ''));
+     // alimentacaoList.sort((a, b) => (b.data ?? '').compareTo(a.data ?? ''));
 
       // for(int i = 0; i < alimentacaoList.length; i++){
       //   DateTime suaData = DateFormat('yyyy-MM-dd').parse(alimentacaoList[i].data.toString());
@@ -170,7 +170,7 @@ deleteAlimentacao(String id) async{
 
 
   setValuesDefault(){
-    alimentacaoDataCtrl.clear();
+    dateController.clear();
     alimentacaoNomeCtrl.clear();
     alimentacaoPrecoCtrl.clear();
 

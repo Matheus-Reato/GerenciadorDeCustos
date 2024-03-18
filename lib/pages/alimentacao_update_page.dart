@@ -118,10 +118,9 @@ class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
                 ElevatedButton(style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
                   foregroundColor: Colors.black,
-                ), onPressed: () {
-                  ctrl.updateAlimentacao(widget.alimentacaoId);
-                  ctrl.fetchAlimentacao();
-
+                ), onPressed: () async {
+                  await ctrl.updateAlimentacao(widget.alimentacaoId);
+                  await ctrl.fetchAlimentacao();
                   Get.off(AlimentacaoPage());
                 }, child: Text('Atualizar', style: TextStyle(fontSize: 24),))
               ],
