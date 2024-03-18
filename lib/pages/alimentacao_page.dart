@@ -4,6 +4,8 @@ import 'package:gerenciador_de_custos/pages/alimentacao_add_page.dart';
 import 'package:gerenciador_de_custos/pages/alimentacao_update_page.dart';
 import 'package:get/get.dart';
 
+import '../model/alimentacao/alimentacao.dart';
+
 class AlimentacaoPage extends StatefulWidget {
   const AlimentacaoPage({super.key});
 
@@ -14,6 +16,9 @@ class AlimentacaoPage extends StatefulWidget {
 }
 
 class _AlimentacaoPageState extends State<AlimentacaoPage> {
+
+  Map<String, Alimentacao> alimentacaoMap = {};
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AlimentacaoController>(builder: (ctrl) {
@@ -51,65 +56,59 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
           padding: EdgeInsets.only(bottom: 80.0),
           child: Column(
             children: [
-              ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: ctrl.alimentacaoList.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      height: 85,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, right: 8.0, bottom: 8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(ctrl.alimentacaoList[index].nome
-                                          ?.toUpperCase() ??
-                                      ''),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                          onPressed: () {
-                                            Get.to(UpdateAlimentacao(
-                                              alimentacao:
-                                                  ctrl.alimentacaoList[index],
-                                            ));
-                                          },
-                                          icon: Icon(Icons.edit)),
-                                      IconButton(
-                                          onPressed: () {
-                                            ctrl.deleteAlimentacao(ctrl
-                                                    .alimentacaoList[index]
-                                                    .id ??
-                                                '');
-                                          },
-                                          icon: Icon(Icons.delete)),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                      'R\$ ${ctrl.alimentacaoList[index].preco ?? 0}'),
-                                  Text(ctrl.alimentacaoList[index].data ?? ''),
-                                ],
-                              ),
-                            ],
-                          ),
+            ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: ctrl.alimentacaoList.length,
+            itemBuilder: (context, index) {
+              final alimentacao = ctrl.alimentacaoList[index];
+              return Container(
+                height: 85,
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 8.0, right: 8.0, bottom: 8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(alimentacao.nome?.toUpperCase() ?? ''),
+                            Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    Get.to(UpdateAlimentacao(
+                                      alimentacaoId: alimentacao.id ?? '',
+                                    ));
+                                  },
+                                  icon: Icon(Icons.edit),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    ctrl.deleteAlimentacao(alimentacao.id ?? '');
+                                  },
+                                  icon: Icon(Icons.delete),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ),
-                    );
-                  }),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('R\$ ${alimentacao.preco?.toStringAsFixed(2) ?? 0}'),
+                            Text(alimentacao.data ?? ''),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }),
             ],
           ),
         ),

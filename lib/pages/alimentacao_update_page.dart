@@ -6,10 +6,10 @@ import '../model/alimentacao/alimentacao.dart';
 import 'alimentacao_page.dart';
 
 class UpdateAlimentacao extends StatefulWidget {
-  final Alimentacao alimentacao;
+  final String alimentacaoId;
 
 
-  UpdateAlimentacao({super.key, required this.alimentacao});
+  UpdateAlimentacao({super.key, required this.alimentacaoId});
 
   @override
   State<UpdateAlimentacao> createState() => _UpdateAlimentacaoState();
@@ -18,14 +18,21 @@ class UpdateAlimentacao extends StatefulWidget {
 class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
 
   final AlimentacaoController ctrl = Get.put(AlimentacaoController());
+
   @override
   void initState() {
     super.initState();
-    // Limpar os controllers quando o widget é inicializado
-    ctrl.dateController.text = widget.alimentacao.data ?? '';
-    ctrl.alimentacaoNomeCtrl.text = widget.alimentacao.nome ?? '';
-    ctrl.alimentacaoPrecoCtrl.text = widget.alimentacao.preco?.toStringAsFixed(2) ?? '';
+    // Carregar detalhes do documento usando o ID recebido
+    ctrl.fetchAlimentacaoDetalhes(widget.alimentacaoId).then((_) {
+      // Preencher os controladores de texto com os detalhes da alimentação
+      ctrl.dateController.text = ctrl.alimentacaoAtual?.data ?? '';
+      ctrl.alimentacaoNomeCtrl.text = ctrl.alimentacaoAtual?.nome ?? '';
+      ctrl.alimentacaoPrecoCtrl.text = ctrl.alimentacaoAtual?.preco.toString() ?? '';
+      setState(() {}); // Garantir que o widget seja reconstruído após atribuir os valores
+    });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +119,7 @@ class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
                   backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
                   foregroundColor: Colors.black,
                 ), onPressed: () {
-                  ctrl.updateAlimentacao(widget.alimentacao.id);
+                  ctrl.updateAlimentacao(widget.alimentacaoId);
                   ctrl.fetchAlimentacao();
 
                   Get.off(AlimentacaoPage());

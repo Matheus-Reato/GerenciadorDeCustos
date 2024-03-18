@@ -10,6 +10,7 @@ class AlimentacaoController extends GetxController{
   late CollectionReference alimentacaoCollection;
 
   List<Alimentacao> alimentacaoList = [];
+  Alimentacao? alimentacaoAtual;
 
   TextEditingController alimentacaoNomeCtrl = TextEditingController();
   TextEditingController alimentacaoPrecoCtrl = TextEditingController();
@@ -55,12 +56,14 @@ addAlimentacao(){
 fetchAlimentacao() async{
     try{
       final userDocRef = firestore.collection('usuario').doc('OhiJeZfpyl76qvqcyRtl');
-      final QuerySnapshot alimentacaoSnapshot = await userDocRef.collection('alimentacao').get();
+      final QuerySnapshot alimentacaoSnapshot = await userDocRef.collection('alimentacao').orderBy('data', descending: true).get();
 
       final List<Alimentacao> retrievedAlimentacao =alimentacaoSnapshot.docs.map((doc) => Alimentacao.fromJson(doc.data() as Map<String, dynamic>)).toList();
 
       alimentacaoList.clear();
       alimentacaoList.assignAll(retrievedAlimentacao);
+
+      alimentacaoList.sort((a, b) => (b.data ?? '').compareTo(a.data ?? ''));
 
       // for(int i = 0; i < alimentacaoList.length; i++){
       //   DateTime suaData = DateFormat('yyyy-MM-dd').parse(alimentacaoList[i].data.toString());
@@ -77,7 +80,25 @@ fetchAlimentacao() async{
     }
 }
 
-Future<double> buscaGasto() async {
+  fetchAlimentacaoDetalhes(String alimentacaoId) async {
+    try {
+      final userDocRef = firestore.collection('usuario').doc('OhiJeZfpyl76qvqcyRtl');
+      final alimentacaoDoc = await userDocRef.collection('alimentacao').doc(alimentacaoId).get();
+
+      // Transformar o documento em um objeto Alimentacao e atualizar o estado
+      final alimentacaoDetalhes = Alimentacao.fromJson(alimentacaoDoc.data() as Map<String, dynamic>);
+      alimentacaoAtual = alimentacaoDetalhes;
+
+      update(); // Notificar que o estado foi atualizado, o que faz com que o widget seja reconstruído
+
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), colorText: Colors.red);
+    }
+  }
+
+
+
+  Future<double> buscaGasto() async {
   double gastoTotal = 0.0;
   final userDocRef = firestore.collection('usuario').doc('OhiJeZfpyl76qvqcyRtl');
   final QuerySnapshot alimentacaoSnapshot = await userDocRef.collection('alimentacao').get();
