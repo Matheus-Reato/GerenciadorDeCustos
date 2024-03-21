@@ -47,6 +47,7 @@ addAlimentacao(){
     Get.snackbar('Sucess', 'Product added successfully', colorText: Colors.green);
 
     setValuesDefault();
+    update();
 
   } catch (e) {
     Get.snackbar('Error', e.toString(), colorText: Colors.red);
@@ -60,18 +61,17 @@ fetchAlimentacao() async{
 
       final List<Alimentacao> retrievedAlimentacao =alimentacaoSnapshot.docs.map((doc) => Alimentacao.fromJson(doc.data() as Map<String, dynamic>)).toList();
 
+      //retrievedAlimentacao.sort((a, b) => (b.data ?? '').compareTo(a.data ?? '')); // Ordenar a lista
+
       alimentacaoList.clear();
       alimentacaoList.addAll(retrievedAlimentacao);
 
-     // alimentacaoList.sort((a, b) => (b.data ?? '').compareTo(a.data ?? ''));
 
       // for(int i = 0; i < alimentacaoList.length; i++){
       //   DateTime suaData = DateFormat('yyyy-MM-dd').parse(alimentacaoList[i].data.toString());
       //   String dataFormatada = DateFormat('dd/MM/yyyy').format(suaData);
       //   alimentacaoList[i].data = dataFormatada;
       // }
-
-      //Get.snackbar('Sucess', 'Product fetch successfully', colorText: Colors.green);
 
     } catch(e){
       Get.snackbar('Error', e.toString(), colorText: Colors.red);
