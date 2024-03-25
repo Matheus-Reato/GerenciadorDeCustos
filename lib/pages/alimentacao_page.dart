@@ -54,9 +54,21 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
   Widget build(BuildContext context) {
     return GetBuilder<AlimentacaoController>(builder: (ctrl) {
       return Scaffold(
-        backgroundColor: Color.fromRGBO(241, 250, 238, 1.0),
+        backgroundColor: Color.fromRGBO(255, 249, 254, 1.0),
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(230, 57, 70, 1.0),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromRGBO(247, 53, 53, 0.9), // Cor esquerda
+                  Color.fromRGBO(217, 94, 96, 1.0), // Cor direita
+                ],
+                begin: Alignment.topCenter, // Início do gradiente no topo
+                end: Alignment.bottomCenter, // Fim do gradiente na base
+              ),
+            ),
+          ),
+
           toolbarHeight: 160,
           title: Column(
             mainAxisAlignment: MainAxisAlignment.center,

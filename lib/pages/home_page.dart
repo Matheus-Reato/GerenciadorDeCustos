@@ -16,14 +16,27 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(241, 250, 238, 1.0),
+      backgroundColor: Color.fromRGBO(255, 249, 254, 1.0),
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromRGBO(128, 217, 132, 0.7), // Cor esquerda
+                Color.fromRGBO(224, 242, 225, 1.0), // Cor direita
+              ],
+              begin: Alignment.topCenter, // Início do gradiente no topo
+              end: Alignment.bottomCenter, // Fim do gradiente na base
+            ),
+          ),
+        ),
+
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Bem vindo',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-            Text('Matheus',
+            Text('Matheus Reato',
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
             SizedBox(
               height: 20,
@@ -49,7 +62,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        backgroundColor: Color.fromRGBO(230, 57, 70, 1.0),
         toolbarHeight: 160,
       ),
       body: Center(
@@ -64,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
                 fixedSize: Size.fromWidth(310),
-                backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
+                backgroundColor: Color.fromRGBO(247, 53, 53, 1.0),
               ),
               onPressed: () {
                 Get.to(AlimentacaoPage());

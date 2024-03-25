@@ -10,6 +10,8 @@ class AlimentacaoController extends GetxController{
   late CollectionReference alimentacaoCollection;
 
   List<Alimentacao> alimentacaoList = [];
+  List<Alimentacao> alimentacaoListOriginal = [];
+
   Alimentacao? alimentacaoAtual;
 
   TextEditingController alimentacaoNomeCtrl = TextEditingController();
@@ -65,6 +67,11 @@ fetchAlimentacao() async{
 
       alimentacaoList.clear();
       alimentacaoList.addAll(retrievedAlimentacao);
+
+      alimentacaoListOriginal.clear();
+      alimentacaoListOriginal.addAll(retrievedAlimentacao);
+
+
 
 
       // for(int i = 0; i < alimentacaoList.length; i++){
