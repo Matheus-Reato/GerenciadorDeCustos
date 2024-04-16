@@ -7,47 +7,48 @@ import 'package:get/get.dart';
 import '../model/alimentacao/alimentacao.dart';
 
 class AlimentacaoPage extends StatefulWidget {
-  const AlimentacaoPage({super.key});
-
-  //MaterialPageRoute
+  const AlimentacaoPage({Key? key}) : super(key: key);
 
   @override
   State<AlimentacaoPage> createState() => _AlimentacaoPageState();
 }
 
 class _AlimentacaoPageState extends State<AlimentacaoPage> {
+  bool _isVisible = true;
   String searchTerm = '';
-  List<Alimentacao> originalAlimentacaoList = []; // Armazena a lista original
+  List<Alimentacao> originalAlimentacaoList = [];
+  List<Alimentacao> searchedAlimentacaoList = [];
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Executar fetchAlimentacao após o primeiro quadro para garantir que o widget seja construído
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       final ctrl = Get.find<AlimentacaoController>();
       ctrl.fetchAlimentacao().then((_) {
-        // Ao concluir o fetch, armazene a lista original e aplique a ordenação
         setState(() {
           originalAlimentacaoList = List<Alimentacao>.from(ctrl.alimentacaoList);
-          _applySearch(ctrl); // Aplica a pesquisa inicial
+          _applySearch(ctrl);
         });
       });
     });
   }
 
-  // Método para aplicar a pesquisa
   void _applySearch(AlimentacaoController ctrl) {
     if (searchTerm.isEmpty) {
-      // Se a pesquisa estiver vazia, exibir a lista original ordenada
-      ctrl.alimentacaoList = List<Alimentacao>.from(originalAlimentacaoList);
+      searchedAlimentacaoList = List<Alimentacao>.from(originalAlimentacaoList);
     } else {
-      // Caso contrário, filtrar a lista original e exibir os resultados da pesquisa
-      ctrl.alimentacaoList = originalAlimentacaoList
-          .where((alimentacao) => (alimentacao.nome ?? '')
-          .toLowerCase()
-          .contains(searchTerm.toLowerCase()))
+      searchedAlimentacaoList = originalAlimentacaoList
+          .where((alimentacao) => (alimentacao.nome ?? '').toLowerCase().contains(searchTerm.toLowerCase()))
           .toList();
     }
+    searchedAlimentacaoList.sort((a, b) => (b.data ?? '').compareTo(a.data ?? ''));
+  }
+
+  void _refreshList(AlimentacaoController ctrl) {
+    setState(() {
+      originalAlimentacaoList = List<Alimentacao>.from(ctrl.alimentacaoList);
+      _applySearch(ctrl);
+    });
   }
 
   @override
@@ -60,15 +61,15 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Color.fromRGBO(247, 53, 53, 0.9), // Cor esquerda
-                  Color.fromRGBO(217, 94, 96, 1.0), // Cor direita
+                  Color.fromRGBO(247, 53, 53, 0.9),
+                  Color.fromRGBO(243, 85, 86, 1.0),
+                  Color.fromRGBO(240, 70, 70, 0.9),
                 ],
-                begin: Alignment.topCenter, // Início do gradiente no topo
-                end: Alignment.bottomCenter, // Fim do gradiente na base
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),
-
           toolbarHeight: 160,
           title: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -80,16 +81,38 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(
-                height: 30,
-              ),
+              SizedBox(height: 30),
               FutureBuilder<double>(
                 future: ctrl.buscaGasto(),
                 builder: (context, snapshot) {
-                  return Text(
-                    'R\$ ${snapshot.data?.toStringAsFixed(2)}',
-                    style: TextStyle(fontSize: 30),
-                  );
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Erro: ${snapshot.error}');
+                  } else if (snapshot.data == null) {
+                    return Text(
+                      '*****',
+                      style: TextStyle(fontSize: 30),
+                    );
+                  } else {
+                    String valueToShow = _isVisible ? 'R\$ ${snapshot.data?.toStringAsFixed(2)}' : '*****';
+                    return Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(_isVisible ? Icons.visibility : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _isVisible = !_isVisible;
+                            });
+                          },
+                        ),
+                        Text(
+                          valueToShow,
+                          style: TextStyle(fontSize: 30),
+                        ),
+                      ],
+                    );
+                  }
                 },
               ),
             ],
@@ -115,7 +138,7 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                         onChanged: (value) {
                           setState(() {
                             searchTerm = value;
-                            _applySearch(ctrl); // Aplica a pesquisa ao digitar
+                            _applySearch(ctrl);
                           });
                         },
                       ),
@@ -126,15 +149,14 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
               ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: ctrl.alimentacaoList.length,
+                itemCount: searchedAlimentacaoList.length,
                 itemBuilder: (context, index) {
-                  final alimentacao = ctrl.alimentacaoList[index];
+                  final alimentacao = searchedAlimentacaoList[index];
                   return Container(
                     height: 85,
                     child: Card(
                       child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 8.0, right: 8.0, bottom: 8.0),
+                        padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,8 +177,9 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                                     ),
                                     IconButton(
                                       onPressed: () {
-                                        ctrl.deleteAlimentacao(
-                                            alimentacao.id ?? '');
+                                        ctrl.deleteAlimentacao(alimentacao.id ?? '').then((_) {
+                                          _refreshList(ctrl); // Atualiza a lista após a exclusão
+                                        });
                                       },
                                       icon: Icon(Icons.delete),
                                     ),
@@ -167,8 +190,7 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                    'R\$ ${alimentacao.preco?.toStringAsFixed(2) ?? 0}'),
+                                Text('R\$ ${alimentacao.preco?.toStringAsFixed(2) ?? 0}'),
                                 Text(alimentacao.data ?? ''),
                               ],
                             ),
@@ -192,6 +214,3 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
     });
   }
 }
-
-
-

@@ -143,8 +143,37 @@ buscaPorNome() async{
   }
 }
 
-updateAlimentacao(String? id) async {
+// updateAlimentacao(String? id) async {
+//
+//     try {
+//       DocumentReference doc = alimentacaoCollection.doc(id);
+//       Alimentacao alimentacao = Alimentacao(
+//         id: id,
+//         data: dateController.text,
+//         nome: alimentacaoNomeCtrl.text,
+//         preco: double.tryParse(alimentacaoPrecoCtrl.text),
+//       );
+//
+//       final alimentacaoJson = alimentacao.toJson();
+//       doc.update(alimentacaoJson);
+//       Get.snackbar('Sucess', 'Product updated successfully', colorText: Colors.green);
+//
+//     } catch (e) {
+//       Get.snackbar('Error', e.toString(), colorText: Colors.red);
+//     }
+//   }
 
+// deleteAlimentacao(String id) async{
+//   try{
+//     await alimentacaoCollection.doc(id).delete();
+//     fetchAlimentacao();
+//   } catch (e){
+//     Get.snackbar('Error', e.toString(), colorText: Colors.red);
+//   }
+//
+// }
+
+  updateAlimentacao(String? id) async {
     try {
       DocumentReference doc = alimentacaoCollection.doc(id);
       Alimentacao alimentacao = Alimentacao(
@@ -155,24 +184,28 @@ updateAlimentacao(String? id) async {
       );
 
       final alimentacaoJson = alimentacao.toJson();
-      doc.update(alimentacaoJson);
-      Get.snackbar('Sucess', 'Product updated successfully', colorText: Colors.green);
+      await doc.update(alimentacaoJson);
 
+      // Após a atualização, reordena a lista
+      final ctrl = Get.find<AlimentacaoController>();
+      ctrl.alimentacaoList.sort((a, b) => (b.data ?? '').compareTo(a.data ?? ''));
+
+      Get.snackbar('Sucesso', 'Produto atualizado com sucesso', colorText: Colors.green);
+    } catch (e) {
+      Get.snackbar('Erro', e.toString(), colorText: Colors.red);
+    }
+  }
+
+
+  Future<void> deleteAlimentacao(String id) async {
+    try {
+      await alimentacaoCollection.doc(id).delete();
+      alimentacaoList.removeWhere((alimentacao) => alimentacao.id == id); // Remover da lista local
     } catch (e) {
       Get.snackbar('Error', e.toString(), colorText: Colors.red);
     }
   }
 
-
-deleteAlimentacao(String id) async{
-  try{
-    await alimentacaoCollection.doc(id).delete();
-    fetchAlimentacao();
-  } catch (e){
-    Get.snackbar('Error', e.toString(), colorText: Colors.red);
-  }
-
-}
 
 
 
