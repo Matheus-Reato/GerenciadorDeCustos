@@ -39,44 +39,65 @@ class _CreateAccountState extends State<CreateAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
-        body: Padding(
-          padding: EdgeInsets.all(20),
-          child: Center(
-            child: Column(
-              children: [
-                TextField(
-                  decoration: const InputDecoration(
-                    hintStyle: TextStyle(fontSize: 20),
-                    hintText: 'Your name',
-                  ),
-                  controller: _name,
+      appBar: AppBar(),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Cadastro de Usuário',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
-                TextField(
-                  decoration: const InputDecoration(
-                    hintStyle: TextStyle(fontSize: 20),
-                    hintText: 'Your email',
-                  ),
-                  controller: _email,
+              ),
+              SizedBox(height: 20),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Nome',
+                  border: OutlineInputBorder(),
                 ),
-                TextField(
-                  decoration: const InputDecoration(
-                    hintStyle: TextStyle(fontSize: 20),
-                    hintText: 'Your password',
-                  ),
-                  controller: _password,
+                controller: _name,
+              ),
+              SizedBox(height: 20),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Email',
+                  border: OutlineInputBorder(),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: ElevatedButton(
-                      child: Text("Create account"),
-                      onPressed: () {
-                        _criarUsuario();
-                      }),
-                )
-              ],
-            ),
+                controller: _email,
+              ),
+              SizedBox(height: 20),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Senha',
+                  border: OutlineInputBorder(),
+                ),
+                controller: _password,
+                obscureText: true,
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _criarUsuario,
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.blue,
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Text(
+                  'Cadastrar conta',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

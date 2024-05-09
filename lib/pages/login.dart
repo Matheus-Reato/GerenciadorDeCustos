@@ -16,13 +16,12 @@ class _LoginState extends State<Login> {
 
   _login() {
     FirebaseAuth auth = FirebaseAuth.instance;
-    auth
-        .signInWithEmailAndPassword(email: _email.text, password: _password.text)
-        .then((value) => {
+    auth.signInWithEmailAndPassword(email: _email.text, password: _password.text)
+        .then((value) {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),
-              (route) => false)
+              (route) => false);
     });
   }
 
@@ -31,42 +30,63 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                decoration: const InputDecoration(
-                  hintStyle: TextStyle(fontSize: 20),
-                  hintText: 'Seu email',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Login',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'Seu email',
+                border: OutlineInputBorder(),
+              ),
+              controller: _email,
+            ),
+            SizedBox(height: 20),
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'Sua senha',
+                border: OutlineInputBorder(),
+              ),
+              controller: _password,
+              obscureText: true,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _login,
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.blue,
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                controller: _email,
               ),
-              TextField(
-                decoration: const InputDecoration(
-                  hintStyle: TextStyle(fontSize: 20),
-                  hintText: 'Sua senha',
-                ),
-                controller: _password,
+              child: Text(
+                'Log-In',
+                style: TextStyle(fontSize: 18),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 20, bottom: 30),
-                child: ElevatedButton(
-                    child: Text("Log-In"),
-                    onPressed: () {
-                      _login();
-                    }),
+            ),
+            SizedBox(height: 10),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CreateAccount()),
+                );
+              },
+              child: Text(
+                'Create account',
+                style: TextStyle(fontSize: 16, color: Colors.blue),
               ),
-              TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CreateAccount()));
-                  },
-                  child: Text('Create account'))
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
