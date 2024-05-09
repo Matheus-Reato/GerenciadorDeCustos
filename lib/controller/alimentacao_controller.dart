@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -26,7 +27,9 @@ class AlimentacaoController extends GetxController{
   Future<void> onInit() async {
   //alimentacaoCollection = FirebaseFirestore.instance.collection('alimentacao');
 
-  alimentacaoCollection = FirebaseFirestore.instance.collection('usuario').doc('OhiJeZfpyl76qvqcyRtl').collection('alimentacao');
+  FirebaseAuth auth = FirebaseAuth.instance;
+  String _userId = auth.currentUser!.uid;
+  alimentacaoCollection = FirebaseFirestore.instance.collection('usuario').doc(_userId).collection('alimentacao');
 
   await fetchAlimentacao();
     super.onInit();
@@ -34,7 +37,9 @@ class AlimentacaoController extends GetxController{
 
 addAlimentacao(){
   try {
-
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String _userId = auth.currentUser!.uid;
+    alimentacaoCollection = FirebaseFirestore.instance.collection('usuario').doc(_userId).collection('alimentacao');
 
     DocumentReference doc = alimentacaoCollection.doc();
     Alimentacao alimentacao = Alimentacao(
@@ -58,7 +63,10 @@ addAlimentacao(){
 
 fetchAlimentacao() async{
     try{
-      final userDocRef = firestore.collection('usuario').doc('OhiJeZfpyl76qvqcyRtl');
+      FirebaseAuth auth = FirebaseAuth.instance;
+      String _userId = auth.currentUser!.uid;
+
+      final userDocRef = firestore.collection('usuario').doc(_userId);
       final QuerySnapshot alimentacaoSnapshot = await userDocRef.collection('alimentacao').orderBy('data', descending: true).get();
 
       final List<Alimentacao> retrievedAlimentacao =alimentacaoSnapshot.docs.map((doc) => Alimentacao.fromJson(doc.data() as Map<String, dynamic>)).toList();
@@ -89,7 +97,10 @@ fetchAlimentacao() async{
 
   fetchAlimentacaoDetalhes(String alimentacaoId) async {
     try {
-      final userDocRef = firestore.collection('usuario').doc('OhiJeZfpyl76qvqcyRtl');
+      FirebaseAuth auth = FirebaseAuth.instance;
+      String _userId = auth.currentUser!.uid;
+
+      final userDocRef = firestore.collection('usuario').doc(_userId);
       final alimentacaoDoc = await userDocRef.collection('alimentacao').doc(alimentacaoId).get();
 
       // Transformar o documento em um objeto Alimentacao e atualizar o estado
@@ -107,7 +118,10 @@ fetchAlimentacao() async{
 
   Future<double> buscaGasto() async {
   double gastoTotal = 0.0;
-  final userDocRef = firestore.collection('usuario').doc('OhiJeZfpyl76qvqcyRtl');
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+  String _userId = auth.currentUser!.uid;
+  final userDocRef = firestore.collection('usuario').doc(_userId);
   final QuerySnapshot alimentacaoSnapshot = await userDocRef.collection('alimentacao').get();
 
   final List<Alimentacao> retrievedAlimentacao =alimentacaoSnapshot.docs.map((doc) => Alimentacao.fromJson(doc.data() as Map<String, dynamic>)).toList();
@@ -123,7 +137,10 @@ fetchAlimentacao() async{
 }
 
 buscaPorNome() async{
-  final userDocRef = firestore.collection('usuario').doc('OhiJeZfpyl76qvqcyRtl');
+  FirebaseAuth auth = FirebaseAuth.instance;
+  String _userId = auth.currentUser!.uid;
+
+  final userDocRef = firestore.collection('usuario').doc(_userId);
   final QuerySnapshot alimentacaoSnapshot = await userDocRef.collection('alimentacao').orderBy('nome').get();
 
   final List<Alimentacao> retrievedAlimentacao =alimentacaoSnapshot.docs.map((doc) => Alimentacao.fromJson(doc.data() as Map<String, dynamic>)).toList();
