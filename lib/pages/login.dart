@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gerenciador_de_custos/pages/home_page.dart';
 import 'package:gerenciador_de_custos/pages/create_account.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +15,15 @@ class _LoginState extends State<Login> {
   TextEditingController _password = TextEditingController();
 
   _login() {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-            (route) => false);
+    FirebaseAuth auth = FirebaseAuth.instance;
+    auth
+        .signInWithEmailAndPassword(email: _email.text, password: _password.text)
+        .then((value) => {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+              (route) => false)
+    });
   }
 
   @override

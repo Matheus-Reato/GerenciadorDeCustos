@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_custos/pages/alimentacao_page.dart';
 import 'package:get/get.dart';
 
 import '../controller/alimentacao_controller.dart';
+import 'login.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,6 +14,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  _deslogarUsuario() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    await auth.signOut().then((value) => {
+      Get.offAll(Login())
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +45,19 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text('Bem vindo',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-            Text('Matheus Reato',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Matheus Reato',
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                ElevatedButton.icon(
+                    onPressed: (){
+              _deslogarUsuario();
+              },
+                icon: Icon(Icons.exit_to_app, color: Colors.red),
+                label: Text('Sair', style: TextStyle(color: Colors.red),),),
+              ],
+            ),
             SizedBox(
               height: 20,
             ),
