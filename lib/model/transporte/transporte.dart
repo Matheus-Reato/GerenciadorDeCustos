@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
-part 'alimentacao.g.dart';
+part 'transporte.g.dart';
 
 @JsonSerializable()
-class Alimentacao {
+class Transporte {
   @JsonKey(name: "id")
   String? id;
 
@@ -24,7 +24,7 @@ class Alimentacao {
 
 
 
-  Alimentacao({
+  Transporte({
     this.id,
     required this.data,
     this.nome,
@@ -33,6 +33,6 @@ class Alimentacao {
     this.anoAtual,
   });
 
-  factory Alimentacao.fromJson(Map<String, dynamic> json) => _$AlimentacaoFromJson(json);
-  Map<String, dynamic> toJson() => _$AlimentacaoToJson(this);
+  factory Transporte.fromJson(Map<String, dynamic> json) => _$TransporteFromJson(json);
+  Map<String, dynamic> toJson() => _$TransporteToJson(this);
 }

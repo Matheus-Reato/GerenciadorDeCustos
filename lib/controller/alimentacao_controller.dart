@@ -5,12 +5,17 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../model/alimentacao/alimentacao.dart';
+import '../model/transporte/transporte.dart';
 
 class AlimentacaoController extends GetxController{
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   late CollectionReference alimentacaoCollection;
 
   List<Alimentacao> alimentacaoList = [];
+  List<Transporte> transporteList = [];
+
+
+
   List<Alimentacao> alimentacaoListOriginal = [];
 
   Alimentacao? alimentacaoAtual;
@@ -22,6 +27,78 @@ class AlimentacaoController extends GetxController{
   TextEditingController alimentacaoSearchCtrl = TextEditingController();
 
   TextEditingController dateController = TextEditingController();
+
+  int? selectedYear;
+  String? selectedModalidade;
+
+  int? selectedMonth;
+
+  void setSelectedMonth(String? monthName) {
+    final Map<String, int> monthsMap = {
+      'Janeiro': 1,
+      'Fevereiro': 2,
+      'Março': 3,
+      'Abril': 4,
+      'Maio': 5,
+      'Junho': 6,
+      'Julho': 7,
+      'Agosto': 8,
+      'Setembro': 9,
+      'Outubro': 10,
+      'Novembro': 11,
+      'Dezembro': 12,
+    };
+
+    selectedMonth = monthsMap[monthName];
+    update();
+  }
+
+  void setSelectedYear(int? year) {
+    selectedYear = year;
+    update();
+  }
+
+  void setSelectedModalidade(String? modalidade) {
+    selectedModalidade = modalidade;
+    update();
+  }
+
+  Future<double> calculoDeGastos() async {
+    double gastoTotal = 0.0;
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String _userId = auth.currentUser!.uid;
+    final userDocRef = firestore.collection('usuario').doc(_userId);
+    final QuerySnapshot alimentacaoSnapshot = await userDocRef.collection('alimentacao').get();
+
+    final List<Alimentacao> retrievedAlimentacao =alimentacaoSnapshot.docs.map((doc) => Alimentacao.fromJson(doc.data() as Map<String, dynamic>)).toList();
+    alimentacaoList.clear();
+    alimentacaoList.assignAll(retrievedAlimentacao);
+
+    final QuerySnapshot transporteSnapshot = await userDocRef.collection('transporte').get();
+    final List<Transporte> retrievedTransporte = transporteSnapshot.docs.map((doc) => Transporte.fromJson(doc.data() as Map<String, dynamic>)).toList();
+    transporteList.clear();
+    transporteList.assignAll(retrievedTransporte);
+
+    for(int i = 0; i < alimentacaoList.length; i++){
+      if(alimentacaoList[i].mesAtual == selectedMonth){
+        gastoTotal += alimentacaoList[i].preco!;
+      }
+    }
+
+    // for(int i = 0; i < transporteList.length; i++){
+    //   if(transporteList[i].anoAtual == selectedYear){
+    //     gastoTotal += transporteList[i].preco!;
+    //   }
+    // }
+
+    print(gastoTotal);
+
+    return gastoTotal;
+
+  }
+
+
 
 @override
   Future<void> onInit() async {
@@ -41,12 +118,18 @@ addAlimentacao(){
     String _userId = auth.currentUser!.uid;
     alimentacaoCollection = FirebaseFirestore.instance.collection('usuario').doc(_userId).collection('alimentacao');
 
+    DateTime now = DateTime.now();
+    int month = now.month;
+    int year = now.year;
+
     DocumentReference doc = alimentacaoCollection.doc();
     Alimentacao alimentacao = Alimentacao(
       id: doc.id,
       data: dateController.text,
       nome: alimentacaoNomeCtrl.text,
       preco: double.tryParse(alimentacaoPrecoCtrl.text),
+      mesAtual: month,
+      anoAtual: year
     );
 
     final alimentacaoJson = alimentacao.toJson();

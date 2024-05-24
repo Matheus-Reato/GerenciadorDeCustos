@@ -82,7 +82,7 @@ class _LoginState extends State<Login> {
                 );
               },
               child: Text(
-                'Create account',
+                'Cadastrar conta',
                 style: TextStyle(fontSize: 16, color: Colors.blue),
               ),
             ),
