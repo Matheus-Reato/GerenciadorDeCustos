@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 
-class DropdownButtonMes extends StatefulWidget {
+class DropdownButtonModalidade extends StatefulWidget {
   final List<String> items;
   final void Function(String?)? onChanged; // Função de retorno de chamada para notificar sobre a mudança
 
-  const DropdownButtonMes({Key? key, required this.items, this.onChanged}) : super(key: key);
+  const DropdownButtonModalidade({Key? key, required this.items, this.onChanged}) : super(key: key);
 
   @override
-  _DropdownButtonMesState createState() => _DropdownButtonMesState();
+  _DropdownButtonModalidadeState createState() => _DropdownButtonModalidadeState();
 }
 
-class _DropdownButtonMesState extends State<DropdownButtonMes> {
+class _DropdownButtonModalidadeState extends State<DropdownButtonModalidade> {
   String? _selectedItem;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 120,
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey, width: 1),
+      ),
+      child: DropdownButtonHideUnderline(
       child: DropdownButton<String>(
         value: _selectedItem,
         onChanged: (String? newValue) {
@@ -34,7 +40,8 @@ class _DropdownButtonMesState extends State<DropdownButtonMes> {
             child: Text(value),
           );
         }).toList(),
-        hint: Text('Selecione'),
+        hint: Text('Modalidade'),
+      ),
       ),
     );
   }

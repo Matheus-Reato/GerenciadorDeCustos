@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../model/alimentacao/alimentacao.dart';
+import '../model/lazer/lazer.dart';
 import '../model/transporte/transporte.dart';
 
 class AlimentacaoController extends GetxController{
@@ -13,8 +14,7 @@ class AlimentacaoController extends GetxController{
 
   List<Alimentacao> alimentacaoList = [];
   List<Transporte> transporteList = [];
-
-
+  List<Lazer> lazerList = [];
 
   List<Alimentacao> alimentacaoListOriginal = [];
 
@@ -30,7 +30,6 @@ class AlimentacaoController extends GetxController{
 
   int? selectedYear;
   String? selectedModalidade;
-
   int? selectedMonth;
 
   void setSelectedMonth(String? monthName) {
@@ -53,8 +52,8 @@ class AlimentacaoController extends GetxController{
     update();
   }
 
-  void setSelectedYear(int? year) {
-    selectedYear = year;
+  void setSelectedYear(String? year) {
+    selectedYear = int.tryParse(year ?? '');
     update();
   }
 
@@ -69,9 +68,9 @@ class AlimentacaoController extends GetxController{
     FirebaseAuth auth = FirebaseAuth.instance;
     String _userId = auth.currentUser!.uid;
     final userDocRef = firestore.collection('usuario').doc(_userId);
-    final QuerySnapshot alimentacaoSnapshot = await userDocRef.collection('alimentacao').get();
 
-    final List<Alimentacao> retrievedAlimentacao =alimentacaoSnapshot.docs.map((doc) => Alimentacao.fromJson(doc.data() as Map<String, dynamic>)).toList();
+    final QuerySnapshot alimentacaoSnapshot = await userDocRef.collection('alimentacao').get();
+    final List<Alimentacao> retrievedAlimentacao = alimentacaoSnapshot.docs.map((doc) => Alimentacao.fromJson(doc.data() as Map<String, dynamic>)).toList();
     alimentacaoList.clear();
     alimentacaoList.assignAll(retrievedAlimentacao);
 
@@ -80,25 +79,60 @@ class AlimentacaoController extends GetxController{
     transporteList.clear();
     transporteList.assignAll(retrievedTransporte);
 
-    for(int i = 0; i < alimentacaoList.length; i++){
-      if(alimentacaoList[i].mesAtual == selectedMonth){
-        gastoTotal += alimentacaoList[i].preco!;
+    final QuerySnapshot lazerSnapshot = await userDocRef.collection('lazer').get();
+    final List<Lazer> retrievedLazer = lazerSnapshot.docs.map((doc) => Lazer.fromJson(doc.data() as Map<String, dynamic>)).toList();
+    lazerList.clear();
+    lazerList.assignAll(retrievedLazer);
+
+
+    if (selectedModalidade == "Todos") {
+      for (int i = 0; i < alimentacaoList.length; i++) {
+        if (alimentacaoList[i].mesAtual == selectedMonth && alimentacaoList[i].anoAtual == selectedYear) {
+          gastoTotal += alimentacaoList[i].preco!;
+        }
+      }
+
+      for (int i = 0; i < transporteList.length; i++) {
+        if (transporteList[i].mesAtual == selectedMonth && transporteList[i].anoAtual == selectedYear) {
+          gastoTotal += transporteList[i].preco!;
+        }
+      }
+
+      for (int i = 0; i < lazerList.length; i++) {
+        if (lazerList[i].mesAtual == selectedMonth && lazerList[i].anoAtual == selectedYear) {
+          gastoTotal += lazerList[i].preco!;
+        }
       }
     }
 
-    // for(int i = 0; i < transporteList.length; i++){
-    //   if(transporteList[i].anoAtual == selectedYear){
-    //     gastoTotal += transporteList[i].preco!;
-    //   }
-    // }
+    if (selectedModalidade == "Alimentação") {
+      for (int i = 0; i < alimentacaoList.length; i++) {
+        if (alimentacaoList[i].mesAtual == selectedMonth && alimentacaoList[i].anoAtual == selectedYear) {
+          gastoTotal += alimentacaoList[i].preco!;
+        }
+      }
+    }
+
+    if (selectedModalidade == "Transporte") {
+      for (int i = 0; i < transporteList.length; i++) {
+        if (transporteList[i].mesAtual == selectedMonth && transporteList[i].anoAtual == selectedYear) {
+          gastoTotal += transporteList[i].preco!;
+        }
+      }
+    }
+
+    if (selectedModalidade == "Lazer") {
+      for (int i = 0; i < lazerList.length; i++) {
+        if (lazerList[i].mesAtual == selectedMonth && lazerList[i].anoAtual == selectedYear) {
+          gastoTotal += lazerList[i].preco!;
+        }
+      }
+    }
 
     print(gastoTotal);
 
     return gastoTotal;
-
   }
-
-
 
 @override
   Future<void> onInit() async {

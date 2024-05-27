@@ -206,7 +206,7 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Get.to(AddAlimentacao());
+            Get.off(AddAlimentacao());
           },
           child: Icon(Icons.add),
         ),

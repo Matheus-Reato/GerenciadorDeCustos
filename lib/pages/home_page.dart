@@ -1,12 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gerenciador_de_custos/pages/DropdownButtonModalidade.dart';
+import 'package:gerenciador_de_custos/widgets/DropdownButtonModalidade.dart';
 import 'package:gerenciador_de_custos/pages/alimentacao_page.dart';
 import 'package:get/get.dart';
 
 import '../controller/alimentacao_controller.dart';
-import 'DropdownButtonAno.dart';
-import 'DropdownButtonMes.dart';
+import '../widgets/DropdownButtonAno.dart';
+import '../widgets/DropdownButtonMes.dart';
 import 'login.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,6 +18,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String? _selectedMonth;
+  String? _selectedYear;
+  String? _selectedModalidade;
+
+  String? _nomeUsuario;
+
+  _pesquisaNomeUsuario() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String _userId = auth.currentUser!.uid;
+    final userDocRef = firestore.collection('usuario').doc(_userId);
+
+    var snapshot = await userDocRef.get();
+    return _nomeUsuario = snapshot.data()?['nome'];
+  }
 
   _deslogarUsuario() async {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -25,13 +42,9 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
-    return GetBuilder<AlimentacaoController>(builder: (ctrl)
-    {
+    return GetBuilder<AlimentacaoController>(builder: (ctrl) {
       // Obter a data atual
       DateTime now = DateTime.now();
 
@@ -55,8 +68,6 @@ class _HomePageState extends State<HomePage> {
 
       String? mesAtual = monthsMap[month];
 
-      String? _selectedMonth;
-
       List<String> meses = [
         'Janeiro',
         'Fevereiro',
@@ -76,7 +87,6 @@ class _HomePageState extends State<HomePage> {
 
       List<String> modalidade = ['Todos', 'Alimentação', 'Transporte', 'Lazer'];
 
-
       return Scaffold(
         backgroundColor: Color.fromRGBO(255, 249, 254, 1.0),
         appBar: AppBar(
@@ -92,21 +102,32 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Bem vindo',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Matheus Reato',
-                      style: TextStyle(
-                          fontSize: 32, fontWeight: FontWeight.bold)),
-                  IconButton(onPressed: () {
-                    _deslogarUsuario();
-                  }, icon: Icon(Icons.exit_to_app), iconSize: 30,)
+                    FutureBuilder<dynamic>(
+                      future: _pesquisaNomeUsuario(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Erro: ${snapshot.error}');
+                        } else {
+                          return Text(snapshot.data ?? 'Nome não encontrado', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),); // Mostra o nome ou uma mensagem padrão se o nome não for encontrado
+                        }
+                      },
+                    ),
+
+                  IconButton(
+                    onPressed: () {
+                      _deslogarUsuario();
+                    },
+                    icon: Icon(Icons.exit_to_app),
+                    iconSize: 30,
+                  )
                 ],
               ),
               SizedBox(
@@ -189,15 +210,45 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(fontSize: 40, color: Colors.black),
                 ),
               ),
+              SizedBox(
+                height: 50,
+              ),
+
+              Text('Calcule seus gastos', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),
+              SizedBox(
+                height: 15,
+              ),
               Row(
                 children: [
-                  DropdownButtonMes(items: meses,
+                  DropdownButtonMes(
+                    items: meses,
                     onChanged: (String? selectedItem) {
-                      ctrl.setSelectedMonth(selectedItem);
-                    },),
-                  DropdownButtonAno(items: anos),
-                  DropdownButtonModalidade(items: modalidade)
+                      setState(() {
+                        _selectedMonth = selectedItem;
+                      });
+                    },
+                  ),
+                  DropdownButtonAno(
+                    items: anos,
+                    onChanged: (String? selectedItem) {
+                      setState(() {
+                        _selectedYear = selectedItem;
+                      });
+                    },
+                  ),
+                  DropdownButtonModalidade(
+                    items: modalidade,
+                    onChanged: (String? selectedItem) {
+                      setState(() {
+                        _selectedModalidade = selectedItem;
+                      });
+                    },
+                  ),
                 ],
+              ),
+
+              SizedBox(
+                height: 20,
               ),
 
               ElevatedButton.icon(
@@ -208,6 +259,9 @@ class _HomePageState extends State<HomePage> {
                   backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
                 ),
                 onPressed: () {
+                  ctrl.setSelectedMonth(_selectedMonth);
+                  ctrl.setSelectedYear(_selectedYear);
+                  ctrl.setSelectedModalidade(_selectedModalidade);
                   ctrl.calculoDeGastos();
                 },
                 icon: Icon(
@@ -221,6 +275,24 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
+              FutureBuilder<double>(
+                future: ctrl.calculoDeGastos(),
+                builder: (context, snapshot) {
+                   if (snapshot.hasError) {
+                    return Text('Erro: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data == null) {
+                    return Text(
+                      'Nenhum dado disponível',
+                      style: TextStyle(fontSize: 30),
+                    );
+                  } else {
+                    return Text(
+                      'R\$ ${snapshot.data!.toStringAsFixed(2)}',
+                      style: TextStyle(fontSize: 30),
+                    );
+                  }
+                },
+              ),
             ],
           ),
         ),
