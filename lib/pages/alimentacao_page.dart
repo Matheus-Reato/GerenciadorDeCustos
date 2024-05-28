@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gerenciador_de_custos/controller/alimentacao_controller.dart';
 import 'package:gerenciador_de_custos/pages/alimentacao_add_page.dart';
 import 'package:gerenciador_de_custos/pages/alimentacao_update_page.dart';
+import 'package:gerenciador_de_custos/widgets/DropdownButtonAlimentacao.dart';
 import 'package:get/get.dart';
 
 import '../model/alimentacao/alimentacao.dart';
@@ -18,6 +19,8 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
   String searchTerm = '';
   List<Alimentacao> originalAlimentacaoList = [];
   List<Alimentacao> searchedAlimentacaoList = [];
+
+  String? _selectedMonth = 'Todos';
 
   @override
   void initState() {
@@ -44,16 +47,35 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
     searchedAlimentacaoList.sort((a, b) => (b.data ?? '').compareTo(a.data ?? ''));
   }
 
-  void _refreshList(AlimentacaoController ctrl) {
-    setState(() {
-      originalAlimentacaoList = List<Alimentacao>.from(ctrl.alimentacaoList);
-      _applySearch(ctrl);
+  void _refresh(AlimentacaoController ctrl){
+    ctrl.fetchAlimentacao().then((_) {
+      setState(() {
+        originalAlimentacaoList = List<Alimentacao>.from(ctrl.alimentacaoList);
+        _applySearch(ctrl);
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AlimentacaoController>(builder: (ctrl) {
+      List<String> meses = [
+        'Todos',
+        'Janeiro',
+        'Fevereiro',
+        'Março',
+        'Abril',
+        'Maio',
+        'Junho',
+        'Julho',
+        'Agosto',
+        'Setembro',
+        'Outubro',
+        'Novembro',
+        'Dezembro'
+      ];
+
+
       return Scaffold(
         backgroundColor: Color.fromRGBO(255, 249, 254, 1.0),
         appBar: AppBar(
@@ -143,6 +165,18 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                         },
                       ),
                     ),
+
+                    Obx(() => DropdownButtonAlimentacao(
+                      items: meses,
+                      onChanged: (String? selectedItem) {
+                        setState(() {
+                          ctrl.setSelectedMonth(selectedItem);
+                        });
+                        ctrl.setSelectedMonthAlimentacao(selectedItem);
+                        _refresh(ctrl);
+                      },
+                      value: ctrl.mesPadrao.value,
+                    )),
                   ],
                 ),
               ),
@@ -169,16 +203,18 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                                   children: [
                                     IconButton(
                                       onPressed: () {
-                                        Get.to(UpdateAlimentacao(
+                                        Get.off(UpdateAlimentacao(
                                           alimentacaoId: alimentacao.id ?? '',
                                         ));
+
+                                        _refresh(ctrl);
                                       },
                                       icon: Icon(Icons.edit),
                                     ),
                                     IconButton(
                                       onPressed: () {
                                         ctrl.deleteAlimentacao(alimentacao.id ?? '').then((_) {
-                                          _refreshList(ctrl); // Atualiza a lista após a exclusão
+                                          _refresh(ctrl); // Atualiza a lista após a exclusão
                                         });
                                       },
                                       icon: Icon(Icons.delete),

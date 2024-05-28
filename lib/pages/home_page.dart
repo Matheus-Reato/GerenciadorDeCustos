@@ -141,159 +141,161 @@ class _HomePageState extends State<HomePage> {
           ),
           toolbarHeight: 160,
         ),
-        body: Center(
-          child: Column(
-            //FAZER UM WIDGET PARA O ELEVATED BUTTON TENDO COMO REQUIRED O TEXT, ASSIM SÓ CHAMA O MÉTODO PASSANDO O NOME
-            children: [
-              SizedBox(
-                height: 40,
-              ),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  fixedSize: Size.fromWidth(310),
-                  backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              //FAZER UM WIDGET PARA O ELEVATED BUTTON TENDO COMO REQUIRED O TEXT, ASSIM SÓ CHAMA O MÉTODO PASSANDO O NOME
+              children: [
+                SizedBox(
+                  height: 40,
                 ),
-                onPressed: () {
-                  Get.to(AlimentacaoPage());
-                },
-                icon: Icon(
-                  Icons.fastfood,
-                  color: Colors.black,
-                  size: 35,
-                ),
-                label: Text(
-                  'Alimentação',
-                  style: TextStyle(fontSize: 40, color: Colors.black),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  fixedSize: Size.fromWidth(310),
-                  backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
-                ),
-                onPressed: () {},
-                icon: Icon(
-                  Icons.car_rental,
-                  color: Colors.black,
-                  size: 35,
-                ),
-                label: Text(
-                  'Transporte',
-                  style: TextStyle(fontSize: 40, color: Colors.black),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  fixedSize: Size.fromWidth(310),
-                  backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
-                ),
-                onPressed: () {},
-                icon: Icon(
-                  Icons.beach_access,
-                  color: Colors.black,
-                  size: 35,
-                ),
-                label: Text(
-                  'Lazer',
-                  style: TextStyle(fontSize: 40, color: Colors.black),
-                ),
-              ),
-              SizedBox(
-                height: 50,
-              ),
-
-              Text('Calcule seus gastos', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),
-              SizedBox(
-                height: 15,
-              ),
-              Row(
-                children: [
-                  DropdownButtonMes(
-                    items: meses,
-                    onChanged: (String? selectedItem) {
-                      setState(() {
-                        _selectedMonth = selectedItem;
-                      });
-                    },
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    fixedSize: Size.fromWidth(310),
+                    backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
                   ),
-                  DropdownButtonAno(
-                    items: anos,
-                    onChanged: (String? selectedItem) {
-                      setState(() {
-                        _selectedYear = selectedItem;
-                      });
-                    },
+                  onPressed: () {
+                    Get.to(AlimentacaoPage());
+                  },
+                  icon: Icon(
+                    Icons.fastfood,
+                    color: Colors.black,
+                    size: 35,
                   ),
-                  DropdownButtonModalidade(
-                    items: modalidade,
-                    onChanged: (String? selectedItem) {
-                      setState(() {
-                        _selectedModalidade = selectedItem;
-                      });
-                    },
+                  label: Text(
+                    'Alimentação',
+                    style: TextStyle(fontSize: 40, color: Colors.black),
                   ),
-                ],
-              ),
-
-              SizedBox(
-                height: 20,
-              ),
-
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  fixedSize: Size.fromWidth(150),
-                  backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
                 ),
-                onPressed: () {
-                  ctrl.setSelectedMonth(_selectedMonth);
-                  ctrl.setSelectedYear(_selectedYear);
-                  ctrl.setSelectedModalidade(_selectedModalidade);
-                  ctrl.calculoDeGastos();
-                },
-                icon: Icon(
-                  Icons.search,
-                  color: Colors.black,
-                  size: 20,
+                SizedBox(
+                  height: 20,
                 ),
-                label: Text(
-                  'Buscar',
-                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    fixedSize: Size.fromWidth(310),
+                    backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
+                  ),
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.car_rental,
+                    color: Colors.black,
+                    size: 35,
+                  ),
+                  label: Text(
+                    'Transporte',
+                    style: TextStyle(fontSize: 40, color: Colors.black),
+                  ),
                 ),
-              ),
-
-              FutureBuilder<double>(
-                future: ctrl.calculoDeGastos(),
-                builder: (context, snapshot) {
-                   if (snapshot.hasError) {
-                    return Text('Erro: ${snapshot.error}');
-                  } else if (!snapshot.hasData || snapshot.data == null) {
-                    return Text(
-                      'Nenhum dado disponível',
-                      style: TextStyle(fontSize: 30),
-                    );
-                  } else {
-                    return Text(
-                      'R\$ ${snapshot.data!.toStringAsFixed(2)}',
-                      style: TextStyle(fontSize: 30),
-                    );
-                  }
-                },
-              ),
-            ],
+                SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    fixedSize: Size.fromWidth(310),
+                    backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
+                  ),
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.beach_access,
+                    color: Colors.black,
+                    size: 35,
+                  ),
+                  label: Text(
+                    'Lazer',
+                    style: TextStyle(fontSize: 40, color: Colors.black),
+                  ),
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+          
+                Text('Calcule seus gastos', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  children: [
+                    DropdownButtonMes(
+                      items: meses,
+                      onChanged: (String? selectedItem) {
+                        setState(() {
+                          _selectedMonth = selectedItem;
+                        });
+                      },
+                    ),
+                    DropdownButtonAno(
+                      items: anos,
+                      onChanged: (String? selectedItem) {
+                        setState(() {
+                          _selectedYear = selectedItem;
+                        });
+                      },
+                    ),
+                    DropdownButtonModalidade(
+                      items: modalidade,
+                      onChanged: (String? selectedItem) {
+                        setState(() {
+                          _selectedModalidade = selectedItem;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+          
+                SizedBox(
+                  height: 20,
+                ),
+          
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    fixedSize: Size.fromWidth(150),
+                    backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
+                  ),
+                  onPressed: () {
+                    ctrl.setSelectedMonth(_selectedMonth);
+                    ctrl.setSelectedYear(_selectedYear);
+                    ctrl.setSelectedModalidade(_selectedModalidade);
+                    ctrl.calculoDeGastos();
+                  },
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.black,
+                    size: 20,
+                  ),
+                  label: Text(
+                    'Buscar',
+                    style: TextStyle(fontSize: 20, color: Colors.black),
+                  ),
+                ),
+          
+                FutureBuilder<double>(
+                  future: ctrl.calculoDeGastos(),
+                  builder: (context, snapshot) {
+                     if (snapshot.hasError) {
+                      return Text('Erro: ${snapshot.error}');
+                    } else if (!snapshot.hasData || snapshot.data == null) {
+                      return Text(
+                        'Nenhum dado disponível',
+                        style: TextStyle(fontSize: 30),
+                      );
+                    } else {
+                      return Text(
+                        'R\$ ${snapshot.data!.toStringAsFixed(2)}',
+                        style: TextStyle(fontSize: 30),
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       );

@@ -28,6 +28,35 @@ class AlimentacaoController extends GetxController{
 
   TextEditingController dateController = TextEditingController();
 
+  int? selectedMonthAlimentacao;
+
+  var mesPadrao = 'Todos'.obs;
+
+  void setSelectedMonthAlimentacao(String? monthName) {
+    mesPadrao.value = monthName ?? 'Todos';
+
+    final Map<String, int> monthsMap = {
+      'Todos': 0,
+      'Janeiro': 1,
+      'Fevereiro': 2,
+      'Março': 3,
+      'Abril': 4,
+      'Maio': 5,
+      'Junho': 6,
+      'Julho': 7,
+      'Agosto': 8,
+      'Setembro': 9,
+      'Outubro': 10,
+      'Novembro': 11,
+      'Dezembro': 12,
+    };
+
+
+    selectedMonthAlimentacao = monthsMap[monthName];
+
+    fetchAlimentacao();
+  }
+
   int? selectedYear;
   String? selectedModalidade;
   int? selectedMonth;
@@ -152,9 +181,11 @@ addAlimentacao(){
     String _userId = auth.currentUser!.uid;
     alimentacaoCollection = FirebaseFirestore.instance.collection('usuario').doc(_userId).collection('alimentacao');
 
-    DateTime now = DateTime.now();
-    int month = now.month;
-    int year = now.year;
+    String dateString = dateController.text;
+    DateTime parsedDate = DateTime.parse(dateString);
+    int month = parsedDate.month;
+    int year = parsedDate.year;
+
 
     DocumentReference doc = alimentacaoCollection.doc();
     Alimentacao alimentacao = Alimentacao(
@@ -178,39 +209,37 @@ addAlimentacao(){
   }
 }
 
-fetchAlimentacao() async{
-    try{
+  Future<void> fetchAlimentacao() async {
+    try {
       FirebaseAuth auth = FirebaseAuth.instance;
       String _userId = auth.currentUser!.uid;
-
       final userDocRef = firestore.collection('usuario').doc(_userId);
-      final QuerySnapshot alimentacaoSnapshot = await userDocRef.collection('alimentacao').orderBy('data', descending: true).get();
+      QuerySnapshot alimentacaoSnapshot;
 
-      final List<Alimentacao> retrievedAlimentacao =alimentacaoSnapshot.docs.map((doc) => Alimentacao.fromJson(doc.data() as Map<String, dynamic>)).toList();
+      if (selectedMonthAlimentacao == 0) {
+        alimentacaoSnapshot = await userDocRef.collection('alimentacao')
+            .orderBy('data', descending: true).get();
+      } else {
+        alimentacaoSnapshot = await userDocRef.collection('alimentacao')
+            .where('mesAtual', isEqualTo: selectedMonthAlimentacao)
+            .orderBy('data', descending: true).get();
+      }
 
-      //retrievedAlimentacao.sort((a, b) => (b.data ?? '').compareTo(a.data ?? '')); // Ordenar a lista
+      final List<Alimentacao> retrievedAlimentacao = alimentacaoSnapshot.docs
+          .map((doc) => Alimentacao.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
 
       alimentacaoList.clear();
       alimentacaoList.addAll(retrievedAlimentacao);
 
       alimentacaoListOriginal.clear();
       alimentacaoListOriginal.addAll(retrievedAlimentacao);
-
-
-
-
-      // for(int i = 0; i < alimentacaoList.length; i++){
-      //   DateTime suaData = DateFormat('yyyy-MM-dd').parse(alimentacaoList[i].data.toString());
-      //   String dataFormatada = DateFormat('dd/MM/yyyy').format(suaData);
-      //   alimentacaoList[i].data = dataFormatada;
-      // }
-
-    } catch(e){
+    } catch (e) {
       Get.snackbar('Error', e.toString(), colorText: Colors.red);
-    } finally{
+    } finally {
       update();
     }
-}
+  }
 
   fetchAlimentacaoDetalhes(String alimentacaoId) async {
     try {
@@ -277,44 +306,21 @@ buscaPorNome() async{
   }
 }
 
-// updateAlimentacao(String? id) async {
-//
-//     try {
-//       DocumentReference doc = alimentacaoCollection.doc(id);
-//       Alimentacao alimentacao = Alimentacao(
-//         id: id,
-//         data: dateController.text,
-//         nome: alimentacaoNomeCtrl.text,
-//         preco: double.tryParse(alimentacaoPrecoCtrl.text),
-//       );
-//
-//       final alimentacaoJson = alimentacao.toJson();
-//       doc.update(alimentacaoJson);
-//       Get.snackbar('Sucess', 'Product updated successfully', colorText: Colors.green);
-//
-//     } catch (e) {
-//       Get.snackbar('Error', e.toString(), colorText: Colors.red);
-//     }
-//   }
-
-// deleteAlimentacao(String id) async{
-//   try{
-//     await alimentacaoCollection.doc(id).delete();
-//     fetchAlimentacao();
-//   } catch (e){
-//     Get.snackbar('Error', e.toString(), colorText: Colors.red);
-//   }
-//
-// }
-
   updateAlimentacao(String? id) async {
     try {
+      String dateString = dateController.text;
+      DateTime parsedDate = DateTime.parse(dateString);
+      int month = parsedDate.month;
+      int year = parsedDate.year;
+
       DocumentReference doc = alimentacaoCollection.doc(id);
       Alimentacao alimentacao = Alimentacao(
-        id: id,
-        data: dateController.text,
-        nome: alimentacaoNomeCtrl.text,
-        preco: double.tryParse(alimentacaoPrecoCtrl.text),
+          id: doc.id,
+          data: dateController.text,
+          nome: alimentacaoNomeCtrl.text,
+          preco: double.tryParse(alimentacaoPrecoCtrl.text),
+          mesAtual: month,
+          anoAtual: year
       );
 
       final alimentacaoJson = alimentacao.toJson();
@@ -339,9 +345,6 @@ buscaPorNome() async{
       Get.snackbar('Error', e.toString(), colorText: Colors.red);
     }
   }
-
-
-
 
   setValuesDefault(){
     dateController.clear();
