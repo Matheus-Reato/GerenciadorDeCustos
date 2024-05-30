@@ -39,9 +39,23 @@ class _CreateAccountState extends State<CreateAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 100,
+        title: Container(
+          padding: EdgeInsets.only(top: 50),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Me Poupe', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),),
+              IconButton(onPressed: (){}, icon: Icon(Icons.monetization_on, size: 40, color: Color.fromRGBO(50, 116, 109, 1.0),)),
+            ],
+          ),
+        ),
+      ),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 100),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -58,7 +72,10 @@ class _CreateAccountState extends State<CreateAccount> {
               TextField(
                 decoration: InputDecoration(
                   hintText: 'Nome',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder( // Use OutlineInputBorder para definir um raio de borda
+                    borderRadius: BorderRadius.circular(20), // Defina o raio da borda
+                    borderSide: BorderSide(color: Colors.grey, width: 1), // Defina a cor e a largura da borda
+                  ),
                 ),
                 controller: _name,
               ),
@@ -66,7 +83,10 @@ class _CreateAccountState extends State<CreateAccount> {
               TextField(
                 decoration: InputDecoration(
                   hintText: 'Email',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder( // Use OutlineInputBorder para definir um raio de borda
+                    borderRadius: BorderRadius.circular(20), // Defina o raio da borda
+                    borderSide: BorderSide(color: Colors.grey, width: 1), // Defina a cor e a largura da borda
+                  ),
                 ),
                 controller: _email,
               ),
@@ -74,7 +94,10 @@ class _CreateAccountState extends State<CreateAccount> {
               TextField(
                 decoration: InputDecoration(
                   hintText: 'Senha',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder( // Use OutlineInputBorder para definir um raio de borda
+                    borderRadius: BorderRadius.circular(20), // Defina o raio da borda
+                    borderSide: BorderSide(color: Colors.grey, width: 1), // Defina a cor e a largura da borda
+                  ),
                 ),
                 controller: _password,
                 obscureText: true,
@@ -83,7 +106,7 @@ class _CreateAccountState extends State<CreateAccount> {
               ElevatedButton(
                 onPressed: _criarUsuario,
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.blue,
+                  backgroundColor: Color.fromRGBO(50, 116, 109, 1.0),
                   padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -91,7 +114,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 ),
                 child: Text(
                   'Cadastrar conta',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
             ],

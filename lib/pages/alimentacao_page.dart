@@ -79,28 +79,23 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
       return Scaffold(
         backgroundColor: Color.fromRGBO(255, 249, 254, 1.0),
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           flexibleSpace: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromRGBO(247, 53, 53, 0.9),
-                  Color.fromRGBO(243, 85, 86, 1.0),
-                  Color.fromRGBO(240, 70, 70, 0.9),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+              color: Color.fromRGBO(16, 79, 85, 1.0)
             ),
           ),
           toolbarHeight: 160,
           title: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 'Alimentação',
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white
                 ),
               ),
               SizedBox(height: 30),
@@ -114,14 +109,16 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                   } else if (snapshot.data == null) {
                     return Text(
                       '*****',
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 30, color: Colors.white),
                     );
                   } else {
                     String valueToShow = _isVisible ? 'R\$ ${snapshot.data?.toStringAsFixed(2)}' : '*****';
                     return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         IconButton(
-                          icon: Icon(_isVisible ? Icons.visibility : Icons.visibility_off),
+                          icon: Icon(_isVisible ? Icons.visibility : Icons.visibility_off, color: Colors.white),
                           onPressed: () {
                             setState(() {
                               _isVisible = !_isVisible;
@@ -130,7 +127,7 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                         ),
                         Text(
                           valueToShow,
-                          style: TextStyle(fontSize: 30),
+                          style: TextStyle(fontSize: 30, color: Colors.white),
                         ),
                       ],
                     );
@@ -153,7 +150,13 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                       width: 150,
                       child: TextField(
                         decoration: InputDecoration(
-                          border: InputBorder.none,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
+                          ),
                           labelText: 'Pesquisar',
                           prefixIcon: Icon(Icons.search),
                         ),
@@ -198,7 +201,7 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(alimentacao.nome?.toUpperCase() ?? ''),
+                                Text(alimentacao.nome?.toUpperCase() ?? '', style: TextStyle(fontWeight: FontWeight.w500),),
                                 Row(
                                   children: [
                                     IconButton(
@@ -226,8 +229,8 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('R\$ ${alimentacao.preco?.toStringAsFixed(2) ?? 0}'),
-                                Text(alimentacao.data ?? ''),
+                                Text('R\$ ${alimentacao.preco?.toStringAsFixed(2) ?? 0}', style: TextStyle(fontWeight: FontWeight.w500),),
+                                Text(alimentacao.data ?? '', style: TextStyle(fontWeight: FontWeight.w500)),
                               ],
                             ),
                           ],
@@ -241,10 +244,11 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Color.fromRGBO(50, 116, 109, 1.0),
           onPressed: () {
             Get.off(AddAlimentacao());
           },
-          child: Icon(Icons.add),
+          child: Icon(Icons.add, color: Colors.white, size: 35,),
         ),
       );
     });

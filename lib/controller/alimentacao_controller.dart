@@ -158,8 +158,6 @@ class AlimentacaoController extends GetxController{
       }
     }
 
-    print(gastoTotal);
-
     return gastoTotal;
   }
 
@@ -216,12 +214,16 @@ addAlimentacao(){
       final userDocRef = firestore.collection('usuario').doc(_userId);
       QuerySnapshot alimentacaoSnapshot;
 
-      if (selectedMonthAlimentacao == 0) {
+      DateTime now = DateTime.now();
+      int currentYear = now.year;
+
+      if (selectedMonthAlimentacao == 0 || selectedMonthAlimentacao == null) {
         alimentacaoSnapshot = await userDocRef.collection('alimentacao')
             .orderBy('data', descending: true).get();
       } else {
         alimentacaoSnapshot = await userDocRef.collection('alimentacao')
             .where('mesAtual', isEqualTo: selectedMonthAlimentacao)
+            .where('anoAtual', isEqualTo: currentYear)
             .orderBy('data', descending: true).get();
       }
 
@@ -260,8 +262,6 @@ addAlimentacao(){
     }
   }
 
-
-
   Future<double> buscaGasto() async {
   double gastoTotal = 0.0;
 
@@ -270,13 +270,24 @@ addAlimentacao(){
   final userDocRef = firestore.collection('usuario').doc(_userId);
   final QuerySnapshot alimentacaoSnapshot = await userDocRef.collection('alimentacao').get();
 
+  DateTime now = DateTime.now();
+  int currentYear = now.year;
+
   final List<Alimentacao> retrievedAlimentacao =alimentacaoSnapshot.docs.map((doc) => Alimentacao.fromJson(doc.data() as Map<String, dynamic>)).toList();
 
   alimentacaoList.clear();
   alimentacaoList.assignAll(retrievedAlimentacao);
 
-  for(int i = 0; i < alimentacaoList.length; i++){
-    gastoTotal += alimentacaoList[i].preco!;
+  if(selectedMonthAlimentacao == null || selectedMonthAlimentacao == 0){
+    for(int i = 0; i < alimentacaoList.length; i++){
+      gastoTotal += alimentacaoList[i].preco!;
+    }
+  } else{
+    for(int i = 0; i < alimentacaoList.length; i++){
+      if(alimentacaoList[i].mesAtual == selectedMonthAlimentacao && alimentacaoList[i].anoAtual == currentYear){
+        gastoTotal += alimentacaoList[i].preco!;
+      }
+    }
   }
 
   return gastoTotal;

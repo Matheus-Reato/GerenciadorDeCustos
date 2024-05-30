@@ -92,21 +92,14 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           flexibleSpace: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromRGBO(128, 217, 132, 0.7), // Cor esquerda
-                  Color.fromRGBO(224, 242, 225, 1.0), // Cor direita
-                ],
-                begin: Alignment.topCenter, // Início do gradiente no topo
-                end: Alignment.bottomCenter, // Fim do gradiente na base
-              ),
+              color: Color.fromRGBO(16, 79, 85, 1.0),
             ),
           ),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Bem vindo',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Colors.white)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -116,7 +109,7 @@ class _HomePageState extends State<HomePage> {
                         if (snapshot.hasError) {
                           return Text('Erro: ${snapshot.error}');
                         } else {
-                          return Text(snapshot.data ?? 'Nome não encontrado', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),); // Mostra o nome ou uma mensagem padrão se o nome não for encontrado
+                          return Text(snapshot.data ?? 'Nome não encontrado', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),); // Mostra o nome ou uma mensagem padrão se o nome não for encontrado
                         }
                       },
                     ),
@@ -125,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () {
                       _deslogarUsuario();
                     },
-                    icon: Icon(Icons.exit_to_app),
+                    icon: Icon(Icons.exit_to_app, color: Colors.white,),
                     iconSize: 30,
                   )
                 ],
@@ -135,7 +128,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Text(
                 'Mês: $mesAtual',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Colors.white),
               ),
             ],
           ),
@@ -154,7 +147,7 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     fixedSize: Size.fromWidth(310),
-                    backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
+                    backgroundColor: Color.fromRGBO(158, 197, 171, 1.0),
                   ),
                   onPressed: () {
                     Get.to(AlimentacaoPage());
@@ -177,11 +170,11 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     fixedSize: Size.fromWidth(310),
-                    backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
+                    backgroundColor: Color.fromRGBO(158, 197, 171, 1.0),
                   ),
                   onPressed: () {},
                   icon: Icon(
-                    Icons.car_rental,
+                    Icons.train,
                     color: Colors.black,
                     size: 35,
                   ),
@@ -198,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     fixedSize: Size.fromWidth(310),
-                    backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
+                    backgroundColor: Color.fromRGBO(158, 197, 171, 1.0),
                   ),
                   onPressed: () {},
                   icon: Icon(
@@ -257,7 +250,7 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     fixedSize: Size.fromWidth(150),
-                    backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
+                    backgroundColor: Color.fromRGBO(50, 116, 109, 1.0),
                   ),
                   onPressed: () {
                     ctrl.setSelectedMonth(_selectedMonth);
@@ -267,12 +260,12 @@ class _HomePageState extends State<HomePage> {
                   },
                   icon: Icon(
                     Icons.search,
-                    color: Colors.black,
+                    color: Colors.white,
                     size: 20,
                   ),
                   label: Text(
                     'Buscar',
-                    style: TextStyle(fontSize: 20, color: Colors.black),
+                    style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
                 ),
           

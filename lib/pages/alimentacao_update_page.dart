@@ -57,22 +57,25 @@ class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
       }
 
       return Scaffold(
-        backgroundColor: Color.fromRGBO(241, 250, 238, 1.0),
+        backgroundColor: Color.fromRGBO(255, 249, 254, 1.0),
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(230, 57, 70, 1.0),
+          automaticallyImplyLeading: false,
+          backgroundColor: Color.fromRGBO(16, 79, 85, 1.0),
           toolbarHeight: 160,
-          title: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Alimentação',
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
+          title: const Center(
+            child: Column(
+              children: [
+                Text(
+                  'Atualização',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white
+                  ),
                 ),
-              ),
 
-            ],
+              ],
+            ),
           ),
         ),
         body: SingleChildScrollView(
@@ -116,13 +119,13 @@ class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
                 ),
                 SizedBox(height: 30,),
                 ElevatedButton(style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
+                  backgroundColor: Color.fromRGBO(50, 116, 109, 1.0),
                   foregroundColor: Colors.black,
                 ), onPressed: () async {
                   await ctrl.updateAlimentacao(widget.alimentacaoId);
                   await ctrl.fetchAlimentacao();
                   Get.off(AlimentacaoPage());
-                }, child: Text('Atualizar', style: TextStyle(fontSize: 24),))
+                }, child: Text('Atualizar', style: TextStyle(fontSize: 24, color: Colors.white),))
               ],
             ),
           ),

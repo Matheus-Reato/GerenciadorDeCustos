@@ -28,12 +28,27 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          toolbarHeight: 100,
+        title: Container(
+          padding: EdgeInsets.only(top: 50),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Me Poupe', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),),
+              IconButton(onPressed: (){}, icon: Icon(Icons.monetization_on, size: 40, color: Color.fromRGBO(50, 116, 109, 1.0),)),
+            ],
+          ),
+        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.only(left: 20,right: 20, bottom: 60),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+
             Text(
               'Login',
               style: TextStyle(
@@ -45,7 +60,10 @@ class _LoginState extends State<Login> {
             TextField(
               decoration: InputDecoration(
                 hintText: 'Seu email',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder( // Use OutlineInputBorder para definir um raio de borda
+                  borderRadius: BorderRadius.circular(20), // Defina o raio da borda
+                  borderSide: BorderSide(color: Colors.grey, width: 1), // Defina a cor e a largura da borda
+                ),
               ),
               controller: _email,
             ),
@@ -53,7 +71,10 @@ class _LoginState extends State<Login> {
             TextField(
               decoration: InputDecoration(
                 hintText: 'Sua senha',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder( // Use OutlineInputBorder para definir um raio de borda
+                  borderRadius: BorderRadius.circular(20), // Defina o raio da borda
+                  borderSide: BorderSide(color: Colors.grey, width: 1), // Defina a cor e a largura da borda
+                ),
               ),
               controller: _password,
               obscureText: true,
@@ -62,7 +83,7 @@ class _LoginState extends State<Login> {
             ElevatedButton(
               onPressed: _login,
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.blue,
+                backgroundColor: Color.fromRGBO(50, 116, 109, 1.0),
                 padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -70,7 +91,7 @@ class _LoginState extends State<Login> {
               ),
               child: Text(
                 'Log-In',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18, color: Colors.white),
               ),
             ),
             SizedBox(height: 10),
@@ -83,7 +104,7 @@ class _LoginState extends State<Login> {
               },
               child: Text(
                 'Cadastrar conta',
-                style: TextStyle(fontSize: 16, color: Colors.blue),
+                style: TextStyle(fontSize: 18, color: Color.fromRGBO(50, 116, 109, 1.0)),
               ),
             ),
           ],

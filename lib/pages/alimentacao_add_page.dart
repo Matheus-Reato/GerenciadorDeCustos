@@ -46,21 +46,24 @@ class _AddAlimentacaoState extends State<AddAlimentacao> {
       }
 
       return Scaffold(
-        backgroundColor: Color.fromRGBO(241, 250, 238, 1.0),
+        backgroundColor: Color.fromRGBO(255, 249, 254, 1.0),
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(230, 57, 70, 1.0),
+          automaticallyImplyLeading: false,
+          backgroundColor: Color.fromRGBO(16, 79, 85, 1.0),
           toolbarHeight: 160,
-          title: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Alimentação',
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
+          title: const Center(
+            child: Column(
+              children: [
+                Text(
+                  'Cadastro',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         body: SingleChildScrollView(
@@ -101,7 +104,7 @@ class _AddAlimentacaoState extends State<AddAlimentacao> {
                 SizedBox(height: 30,),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromRGBO(252, 231, 232, 1.0),
+                    backgroundColor: Color.fromRGBO(50, 116, 109, 1.0),
                     foregroundColor: Colors.black,
                   ),
                   onPressed: () async {
@@ -110,7 +113,7 @@ class _AddAlimentacaoState extends State<AddAlimentacao> {
                     Get.off(AlimentacaoPage());
 
                   },
-                  child: Text('Adicionar', style: TextStyle(fontSize: 24),),
+                  child: Text('Adicionar', style: TextStyle(fontSize: 24, color: Colors.white),),
                 ),
               ],
             ),
