@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:gerenciador_de_custos/controller/alimentacao_controller.dart';
-import 'package:gerenciador_de_custos/pages/alimentacao_page.dart';
+import 'package:gerenciador_de_custos/controller/transporte_controller.dart';
+import 'package:gerenciador_de_custos/model/transporte/transporte.dart';
+import 'package:gerenciador_de_custos/pages/transporte_page.dart';
 import 'package:get/get.dart';
 
-class AddAlimentacao extends StatefulWidget {
-  const AddAlimentacao({Key? key});
+class AddTransporte extends StatefulWidget {
+  const AddTransporte({Key? key});
 
   @override
-  State<AddAlimentacao> createState() => _AddAlimentacaoState();
+  State<AddTransporte> createState() => _AddTransporteState();
 }
 
-class _AddAlimentacaoState extends State<AddAlimentacao> {
+class _AddTransporteState extends State<AddTransporte> {
 
-  final AlimentacaoController ctrl = Get.put(AlimentacaoController());
+  final TransporteController ctrl = Get.put(TransporteController());
 
   @override
   void initState() {
     super.initState();
     // Limpar os controllers quando o widget é inicializado
-    ctrl.alimentacaoNomeCtrl.clear();
-    ctrl.alimentacaoPrecoCtrl.clear();
+    ctrl.transporteNomeCtrl.clear();
+    ctrl.transportePrecoCtrl.clear();
     ctrl.dateController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AlimentacaoController>(builder: (ctrl) {
+    return GetBuilder<TransporteController>(builder: (ctrl) {
 
       Future<void> _selectDate(BuildContext context) async {
         final DateTime? picked = await showDatePicker(
@@ -57,9 +58,9 @@ class _AddAlimentacaoState extends State<AddAlimentacao> {
                 Text(
                   'Cadastro',
                   style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white
                   ),
                 ),
               ],
@@ -85,7 +86,7 @@ class _AddAlimentacaoState extends State<AddAlimentacao> {
                 ),
                 SizedBox(height: 30,),
                 TextFormField(
-                  controller: ctrl.alimentacaoNomeCtrl,
+                  controller: ctrl.transporteNomeCtrl,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Nome',
@@ -94,7 +95,7 @@ class _AddAlimentacaoState extends State<AddAlimentacao> {
                 ),
                 SizedBox(height: 30,),
                 TextFormField(
-                  controller: ctrl.alimentacaoPrecoCtrl,
+                  controller: ctrl.transportePrecoCtrl,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Preço',
@@ -108,13 +109,14 @@ class _AddAlimentacaoState extends State<AddAlimentacao> {
                     foregroundColor: Colors.black,
                   ),
                   onPressed: () async {
-                    if(ctrl.alimentacaoNomeCtrl.text == '' || ctrl.alimentacaoPrecoCtrl.text == '' || ctrl.dateController.text == ''){
-                    Get.snackbar('Error', 'Campos obrigatórios em branco', colorText: Colors.red);
+                    if(ctrl.transporteNomeCtrl.text == '' || ctrl.transportePrecoCtrl.text == '' || ctrl.dateController.text == ''){
+                      Get.snackbar('Error', 'Campos obrigatórios em branco', colorText: Colors.red);
                     } else {
-                      await ctrl.addAlimentacao();
-                      await ctrl.fetchAlimentacao();
-                      Get.off(AlimentacaoPage());
+                      await ctrl.addTransporte();
+                      await ctrl.fetchTransporte();
+                      Get.off(TransportePage());
                     }
+
                   },
                   child: Text('Adicionar', style: TextStyle(fontSize: 24, color: Colors.white),),
                 ),

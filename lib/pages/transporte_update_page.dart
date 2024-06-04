@@ -1,33 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:gerenciador_de_custos/controller/alimentacao_controller.dart';
+import 'package:gerenciador_de_custos/pages/transporte_page.dart';
 import 'package:get/get.dart';
+import '../controller/transporte_controller.dart';
 
-import '../model/alimentacao/alimentacao.dart';
-import 'alimentacao_page.dart';
-
-class UpdateAlimentacao extends StatefulWidget {
-  final String alimentacaoId;
+class UpdateTransporte extends StatefulWidget {
+  final String transporteId;
 
 
-  UpdateAlimentacao({super.key, required this.alimentacaoId});
+  UpdateTransporte({super.key, required this.transporteId});
 
   @override
-  State<UpdateAlimentacao> createState() => _UpdateAlimentacaoState();
+  State<UpdateTransporte> createState() => _UpdateTransporteState();
 }
 
-class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
+class _UpdateTransporteState extends State<UpdateTransporte> {
 
-  final AlimentacaoController ctrl = Get.put(AlimentacaoController());
+  final TransporteController ctrl = Get.put(TransporteController());
 
   @override
   void initState() {
     super.initState();
     // Carregar detalhes do documento usando o ID recebido
-    ctrl.fetchAlimentacaoDetalhes(widget.alimentacaoId).then((_) {
+    ctrl.fetchTransporteDetalhes(widget.transporteId).then((_) {
       // Preencher os controladores de texto com os detalhes da alimentação
-      ctrl.dateController.text = ctrl.alimentacaoAtual?.data ?? '';
-      ctrl.alimentacaoNomeCtrl.text = ctrl.alimentacaoAtual?.nome ?? '';
-      ctrl.alimentacaoPrecoCtrl.text = ctrl.alimentacaoAtual?.preco.toString() ?? '';
+      ctrl.dateController.text = ctrl.transporteAtual?.data ?? '';
+      ctrl.transporteNomeCtrl.text = ctrl.transporteAtual?.nome ?? '';
+      ctrl.transportePrecoCtrl.text = ctrl.transporteAtual?.preco.toString() ?? '';
       setState(() {}); // Garantir que o widget seja reconstruído após atribuir os valores
     });
   }
@@ -36,7 +34,7 @@ class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AlimentacaoController>(builder: (ctrl) {
+    return GetBuilder<TransporteController>(builder: (ctrl) {
 
       Future<void> _selectDate(BuildContext context) async {
         final DateTime? picked = await showDatePicker(
@@ -68,9 +66,9 @@ class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
                 Text(
                   'Atualização',
                   style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white
                   ),
                 ),
 
@@ -99,7 +97,7 @@ class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
 
                 SizedBox(height: 30,),
                 TextFormField(
-                  controller: ctrl.alimentacaoNomeCtrl,
+                  controller: ctrl.transporteNomeCtrl,
                   decoration: InputDecoration(
                     //icon: Icon(Icons.calendar_month),
                       border: OutlineInputBorder(),
@@ -109,7 +107,7 @@ class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
                 ),
                 SizedBox(height: 30,),
                 TextFormField(
-                  controller: ctrl.alimentacaoPrecoCtrl,
+                  controller: ctrl.transportePrecoCtrl,
                   decoration: InputDecoration(
                     //icon: Icon(Icons.calendar_month),
                       border: OutlineInputBorder(),
@@ -122,14 +120,13 @@ class _UpdateAlimentacaoState extends State<UpdateAlimentacao> {
                   backgroundColor: Color.fromRGBO(50, 116, 109, 1.0),
                   foregroundColor: Colors.black,
                 ), onPressed: () async {
-                  if(ctrl.alimentacaoNomeCtrl.text == '' || ctrl.alimentacaoPrecoCtrl.text == '' || ctrl.dateController.text == ''){
+                  if(ctrl.transporteNomeCtrl.text == '' || ctrl.transportePrecoCtrl.text == '' || ctrl.dateController.text == ''){
                     Get.snackbar('Error', 'Campos obrigatórios em branco', colorText: Colors.red);
                   } else {
-                    await ctrl.updateAlimentacao(widget.alimentacaoId);
-                    await ctrl.fetchAlimentacao();
-                    Get.off(AlimentacaoPage());
+                    await ctrl.updateTransporte(widget.transporteId);
+                    await ctrl.fetchTransporte();
+                    Get.off(TransportePage());
                   }
-
                 }, child: Text('Atualizar', style: TextStyle(fontSize: 24, color: Colors.white),))
               ],
             ),

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_custos/controller/alimentacao_controller.dart';
+import 'package:gerenciador_de_custos/controller/transporte_controller.dart';
 import 'package:gerenciador_de_custos/pages/home_page.dart';
 import 'package:gerenciador_de_custos/pages/login.dart';
 import 'package:get/get.dart';
@@ -16,6 +17,7 @@ void main() async{
   );
 
   Get.put(AlimentacaoController());
+  Get.put(TransporteController());
 
   runApp(const MyApp());
 }

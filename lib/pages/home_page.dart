@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gerenciador_de_custos/pages/transporte_page.dart';
 import 'package:gerenciador_de_custos/widgets/DropdownButtonModalidade.dart';
 import 'package:gerenciador_de_custos/pages/alimentacao_page.dart';
 import 'package:get/get.dart';
@@ -172,7 +173,9 @@ class _HomePageState extends State<HomePage> {
                     fixedSize: Size.fromWidth(310),
                     backgroundColor: Color.fromRGBO(158, 197, 171, 1.0),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(TransportePage());
+                  },
                   icon: Icon(
                     Icons.train,
                     color: Colors.black,

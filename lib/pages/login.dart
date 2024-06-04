@@ -42,72 +42,74 @@ class _LoginState extends State<Login> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20,right: 20, bottom: 60),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-
-            Text(
-              'Login',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Seu email',
-                border: OutlineInputBorder( // Use OutlineInputBorder para definir um raio de borda
-                  borderRadius: BorderRadius.circular(20), // Defina o raio da borda
-                  borderSide: BorderSide(color: Colors.grey, width: 1), // Defina a cor e a largura da borda
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20,right: 20, bottom: 60),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+        
+              Text(
+                'Login',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              controller: _email,
-            ),
-            SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Sua senha',
-                border: OutlineInputBorder( // Use OutlineInputBorder para definir um raio de borda
-                  borderRadius: BorderRadius.circular(20), // Defina o raio da borda
-                  borderSide: BorderSide(color: Colors.grey, width: 1), // Defina a cor e a largura da borda
+              SizedBox(height: 20),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Seu email',
+                  border: OutlineInputBorder( // Use OutlineInputBorder para definir um raio de borda
+                    borderRadius: BorderRadius.circular(20), // Defina o raio da borda
+                    borderSide: BorderSide(color: Colors.grey, width: 1), // Defina a cor e a largura da borda
+                  ),
+                ),
+                controller: _email,
+              ),
+              SizedBox(height: 20),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Sua senha',
+                  border: OutlineInputBorder( // Use OutlineInputBorder para definir um raio de borda
+                    borderRadius: BorderRadius.circular(20), // Defina o raio da borda
+                    borderSide: BorderSide(color: Colors.grey, width: 1), // Defina a cor e a largura da borda
+                  ),
+                ),
+                controller: _password,
+                obscureText: true,
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _login,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromRGBO(50, 116, 109, 1.0),
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Text(
+                  'Log-In',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
-              controller: _password,
-              obscureText: true,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _login,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromRGBO(50, 116, 109, 1.0),
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+              SizedBox(height: 10),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CreateAccount()),
+                  );
+                },
+                child: Text(
+                  'Cadastrar conta',
+                  style: TextStyle(fontSize: 18, color: Color.fromRGBO(50, 116, 109, 1.0)),
                 ),
               ),
-              child: Text(
-                'Log-In',
-                style: TextStyle(fontSize: 18, color: Colors.white),
-              ),
-            ),
-            SizedBox(height: 10),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CreateAccount()),
-                );
-              },
-              child: Text(
-                'Cadastrar conta',
-                style: TextStyle(fontSize: 18, color: Color.fromRGBO(50, 116, 109, 1.0)),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

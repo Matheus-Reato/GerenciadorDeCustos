@@ -190,7 +190,7 @@ addAlimentacao(){
       id: doc.id,
       data: dateController.text,
       nome: alimentacaoNomeCtrl.text,
-      preco: double.tryParse(alimentacaoPrecoCtrl.text),
+      preco: double.tryParse(alimentacaoPrecoCtrl.text.replaceAll(',', '.')),
       mesAtual: month,
       anoAtual: year
     );
@@ -329,7 +329,7 @@ buscaPorNome() async{
           id: doc.id,
           data: dateController.text,
           nome: alimentacaoNomeCtrl.text,
-          preco: double.tryParse(alimentacaoPrecoCtrl.text),
+          preco: double.tryParse(alimentacaoPrecoCtrl.text.replaceAll(',', '.')),
           mesAtual: month,
           anoAtual: year
       );
