@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gerenciador_de_custos/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:gerenciador_de_custos/pages/login.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/snackbar/snackbar.dart';
@@ -264,7 +265,7 @@ class _CreateAccountState extends State<CreateAccount> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 100),
+          padding: EdgeInsets.only(left: 20, right: 20, top: 60),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -316,7 +317,7 @@ class _CreateAccountState extends State<CreateAccount> {
                   onPressed: _criarUsuario,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromRGBO(50, 116, 109, 1.0),
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    padding: EdgeInsets.symmetric(horizontal: 85, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -326,6 +327,26 @@ class _CreateAccountState extends State<CreateAccount> {
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Já é um membro?', style: TextStyle(fontSize: 18, color: Colors.black),),
+
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Login()),
+                        );
+                      },
+                      child: Text(
+                        'Entrar',
+                        style: TextStyle(fontSize: 18, color: Color.fromRGBO(50, 116, 109, 1.0)),
+                      ),
+                    ),
+                  ],
+
+                )
               ],
             ),
           ),

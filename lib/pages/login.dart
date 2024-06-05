@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import 'forgot_password.dart';
+
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -52,7 +54,7 @@ class _LoginState extends State<Login> {
             ),
           ),
           messageText: Text(
-              'Email ou senha inválido',
+              'Email ou senha inválidos',
               style: TextStyle(
                 fontSize: 16, // Tamanho da fonte da mensagem
                 color: Colors.white,
@@ -66,6 +68,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
           toolbarHeight: 100,
         title: Container(
           padding: EdgeInsets.only(top: 50),
@@ -81,7 +84,7 @@ class _LoginState extends State<Login> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 20,right: 20, bottom: 60),
+          padding: const EdgeInsets.only(left: 20,right: 20, top: 60),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -117,12 +120,33 @@ class _LoginState extends State<Login> {
                 controller: _password,
                 obscureText: true,
               ),
-              SizedBox(height: 20),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ForgotPassword()),
+                        );
+                      },
+                      child: Text(
+                        'Esqueci minha senha',
+                        style: TextStyle(fontSize: 18, color: Color.fromRGBO(50, 116, 109, 1.0)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
               ElevatedButton(
                 onPressed: _login,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromRGBO(50, 116, 109, 1.0),
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  padding: EdgeInsets.symmetric(horizontal: 125, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -133,18 +157,26 @@ class _LoginState extends State<Login> {
                 ),
               ),
               SizedBox(height: 10),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CreateAccount()),
-                  );
-                },
-                child: Text(
-                  'Cadastrar conta',
-                  style: TextStyle(fontSize: 18, color: Color.fromRGBO(50, 116, 109, 1.0)),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Não é um membro?', style: TextStyle(fontSize: 18, color: Colors.black),),
+
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CreateAccount()),
+                      );
+                    },
+                    child: Text(
+                      'Cadastre-se',
+                      style: TextStyle(fontSize: 18, color: Color.fromRGBO(50, 116, 109, 1.0)),
+                    ),
+                  ),
+                ],
               ),
+
             ],
           ),
         ),

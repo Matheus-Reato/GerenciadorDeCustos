@@ -166,11 +166,11 @@ class AlimentacaoController extends GetxController{
   Future<void> onInit() async {
   //alimentacaoCollection = FirebaseFirestore.instance.collection('alimentacao');
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-  String _userId = auth.currentUser!.uid;
-  alimentacaoCollection = FirebaseFirestore.instance.collection('usuario').doc(_userId).collection('alimentacao');
+   FirebaseAuth auth = FirebaseAuth.instance;
+   String _userId = auth.currentUser!.uid;
+   alimentacaoCollection = FirebaseFirestore.instance.collection('usuario').doc(_userId).collection('alimentacao');
 
-  await fetchAlimentacao();
+ await fetchAlimentacao();
     super.onInit();
   }
 
