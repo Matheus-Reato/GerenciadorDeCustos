@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:gerenciador_de_custos/controller/transporte_controller.dart';
-import 'package:gerenciador_de_custos/model/transporte/transporte.dart';
-import 'package:gerenciador_de_custos/pages/transporte_page.dart';
+import 'package:gerenciador_de_custos/pages/lazer_page.dart';
 import 'package:get/get.dart';
+import '../controller/lazer_controller.dart';
 
-class AddTransporte extends StatefulWidget {
-  const AddTransporte({Key? key});
+class AddLazer extends StatefulWidget {
+  const AddLazer ({Key? key});
 
   @override
-  State<AddTransporte> createState() => _AddTransporteState();
+  State<AddLazer> createState() => _AddLazerState();
 }
 
-class _AddTransporteState extends State<AddTransporte> {
+class _AddLazerState extends State<AddLazer> {
 
-  final TransporteController ctrl = Get.put(TransporteController());
+  final LazerController ctrl = Get.put(LazerController());
 
   @override
   void initState() {
     super.initState();
     // Limpar os controllers quando o widget é inicializado
-    ctrl.transporteNomeCtrl.clear();
-    ctrl.transportePrecoCtrl.clear();
+    ctrl.lazerNomeCtrl.clear();
+    ctrl.lazerPrecoCtrl.clear();
     ctrl.dateController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<TransporteController>(builder: (ctrl) {
+    return GetBuilder<LazerController>(builder: (ctrl) {
 
       Future<void> _selectDate(BuildContext context) async {
         final DateTime? picked = await showDatePicker(
@@ -86,7 +85,7 @@ class _AddTransporteState extends State<AddTransporte> {
                 ),
                 SizedBox(height: 30,),
                 TextFormField(
-                  controller: ctrl.transporteNomeCtrl,
+                  controller: ctrl.lazerNomeCtrl,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Nome',
@@ -95,7 +94,7 @@ class _AddTransporteState extends State<AddTransporte> {
                 ),
                 SizedBox(height: 30,),
                 TextFormField(
-                  controller: ctrl.transportePrecoCtrl,
+                  controller: ctrl.lazerPrecoCtrl,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Preço',
@@ -109,34 +108,34 @@ class _AddTransporteState extends State<AddTransporte> {
                     foregroundColor: Colors.black,
                   ),
                   onPressed: () async {
-                    if(ctrl.transporteNomeCtrl.text == '' || ctrl.transportePrecoCtrl.text == '' || ctrl.dateController.text == ''){
+                    if(ctrl.lazerNomeCtrl.text == '' || ctrl.lazerPrecoCtrl.text == '' || ctrl.dateController.text == ''){
                       Get.snackbar(
-                        'Erro',
-                        'Campos obrigatórios em branco',
-                        colorText: Colors.white, // Cor do texto
-                        backgroundColor: Colors.red, // Cor de fundo
-                        snackPosition: SnackPosition.BOTTOM, // Posição do snackbar (TOP ou BOTTOM)
-                        borderRadius: 20, // Raio da borda
-                        margin: EdgeInsets.all(15), // Margem ao redor do snackbar
-                        icon: Icon(Icons.error, color: Colors.white), // Ícone
-                        shouldIconPulse: true, // Animação de pulsar do ícone
-                        barBlur: 20, // Desfocagem do fundo da barra
-                        isDismissible: true, // Se o snackbar pode ser dispensado
-                        duration: Duration(seconds: 3), // Duração do snackbar
-                        forwardAnimationCurve: Curves.easeOutBack, // Curva de animação de entrada
-                        reverseAnimationCurve: Curves.easeInBack, // Curva de animação de saída
-                        messageText: Text(
+                          'Erro',
                           'Campos obrigatórios em branco',
-                          style: TextStyle(
-                          fontSize: 16, // Tamanho da fonte da mensagem
-                          color: Colors.white,
+                          colorText: Colors.white, // Cor do texto
+                          backgroundColor: Colors.red, // Cor de fundo
+                          snackPosition: SnackPosition.BOTTOM, // Posição do snackbar (TOP ou BOTTOM)
+                          borderRadius: 20, // Raio da borda
+                          margin: EdgeInsets.all(15), // Margem ao redor do snackbar
+                          icon: Icon(Icons.error, color: Colors.white), // Ícone
+                          shouldIconPulse: true, // Animação de pulsar do ícone
+                          barBlur: 20, // Desfocagem do fundo da barra
+                          isDismissible: true, // Se o snackbar pode ser dispensado
+                          duration: Duration(seconds: 3), // Duração do snackbar
+                          forwardAnimationCurve: Curves.easeOutBack, // Curva de animação de entrada
+                          reverseAnimationCurve: Curves.easeInBack, // Curva de animação de saída
+                          messageText: Text(
+                              'Campos obrigatórios em branco',
+                              style: TextStyle(
+                                fontSize: 16, // Tamanho da fonte da mensagem
+                                color: Colors.white,
+                              )
                           )
-                        )
                       );
                     } else {
-                      await ctrl.addTransporte();
-                      await ctrl.fetchTransporte();
-                      Get.off(TransportePage());
+                      await ctrl.addLazer();
+                      await ctrl.fetchLazer();
+                      Get.off(LazerPage());
                     }
 
                   },

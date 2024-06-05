@@ -92,7 +92,8 @@ class AlimentacaoController extends GetxController{
   }
 
   Future<double> calculoDeGastos() async {
-    double gastoTotal = 0.0;
+
+    double filtroGastoTotal = 0.0;
 
     FirebaseAuth auth = FirebaseAuth.instance;
     String _userId = auth.currentUser!.uid;
@@ -117,19 +118,19 @@ class AlimentacaoController extends GetxController{
     if (selectedModalidade == "Todos") {
       for (int i = 0; i < alimentacaoList.length; i++) {
         if (alimentacaoList[i].mesAtual == selectedMonth && alimentacaoList[i].anoAtual == selectedYear) {
-          gastoTotal += alimentacaoList[i].preco!;
+          filtroGastoTotal += alimentacaoList[i].preco!;
         }
       }
 
       for (int i = 0; i < transporteList.length; i++) {
         if (transporteList[i].mesAtual == selectedMonth && transporteList[i].anoAtual == selectedYear) {
-          gastoTotal += transporteList[i].preco!;
+          filtroGastoTotal += transporteList[i].preco!;
         }
       }
 
       for (int i = 0; i < lazerList.length; i++) {
         if (lazerList[i].mesAtual == selectedMonth && lazerList[i].anoAtual == selectedYear) {
-          gastoTotal += lazerList[i].preco!;
+          filtroGastoTotal += lazerList[i].preco!;
         }
       }
     }
@@ -137,7 +138,7 @@ class AlimentacaoController extends GetxController{
     if (selectedModalidade == "Alimentação") {
       for (int i = 0; i < alimentacaoList.length; i++) {
         if (alimentacaoList[i].mesAtual == selectedMonth && alimentacaoList[i].anoAtual == selectedYear) {
-          gastoTotal += alimentacaoList[i].preco!;
+          filtroGastoTotal += alimentacaoList[i].preco!;
         }
       }
     }
@@ -145,7 +146,7 @@ class AlimentacaoController extends GetxController{
     if (selectedModalidade == "Transporte") {
       for (int i = 0; i < transporteList.length; i++) {
         if (transporteList[i].mesAtual == selectedMonth && transporteList[i].anoAtual == selectedYear) {
-          gastoTotal += transporteList[i].preco!;
+          filtroGastoTotal += transporteList[i].preco!;
         }
       }
     }
@@ -153,12 +154,12 @@ class AlimentacaoController extends GetxController{
     if (selectedModalidade == "Lazer") {
       for (int i = 0; i < lazerList.length; i++) {
         if (lazerList[i].mesAtual == selectedMonth && lazerList[i].anoAtual == selectedYear) {
-          gastoTotal += lazerList[i].preco!;
+          filtroGastoTotal += lazerList[i].preco!;
         }
       }
     }
 
-    return gastoTotal;
+    return filtroGastoTotal;
   }
 
 @override
@@ -197,13 +198,43 @@ addAlimentacao(){
 
     final alimentacaoJson = alimentacao.toJson();
     doc.set(alimentacaoJson);
-    Get.snackbar('Sucess', 'Product added successfully', colorText: Colors.green);
+    Get.snackbar(
+      '', // Título vazio porque estamos usando `titleText` personalizado
+      '',
+      colorText: Colors.white,
+      backgroundColor: Colors.green,
+      snackPosition: SnackPosition.BOTTOM,
+      borderRadius: 20,
+      margin: EdgeInsets.all(15),
+      icon: Icon(Icons.check_circle, color: Colors.white),
+      shouldIconPulse: true,
+      barBlur: 20,
+      isDismissible: true,
+      duration: Duration(seconds: 3),
+      forwardAnimationCurve: Curves.easeOutBack,
+      reverseAnimationCurve: Curves.easeInBack,
+      titleText: Text(
+        'Sucesso',
+        style: TextStyle(
+          fontSize: 20, // Tamanho da fonte do título
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+      messageText: Text(
+        'Produto cadastrado com sucesso',
+        style: TextStyle(
+          fontSize: 16, // Tamanho da fonte da mensagem
+          color: Colors.white,
+        ),
+      ),
+    );
 
     setValuesDefault();
     update();
 
   } catch (e) {
-    Get.snackbar('Error', e.toString(), colorText: Colors.red);
+    avisoErroPadrao(e);
   }
 }
 
@@ -237,7 +268,7 @@ addAlimentacao(){
       alimentacaoListOriginal.clear();
       alimentacaoListOriginal.addAll(retrievedAlimentacao);
     } catch (e) {
-      Get.snackbar('Error', e.toString(), colorText: Colors.red);
+     avisoErroPadrao(e);
     } finally {
       update();
     }
@@ -258,7 +289,7 @@ addAlimentacao(){
       update(); // Notificar que o estado foi atualizado, o que faz com que o widget seja reconstruído
 
     } catch (e) {
-      Get.snackbar('Error', e.toString(), colorText: Colors.red);
+      avisoErroPadrao(e);
     }
   }
 
@@ -341,9 +372,39 @@ buscaPorNome() async{
       final ctrl = Get.find<AlimentacaoController>();
       ctrl.alimentacaoList.sort((a, b) => (b.data ?? '').compareTo(a.data ?? ''));
 
-      Get.snackbar('Sucesso', 'Produto atualizado com sucesso', colorText: Colors.green);
+      Get.snackbar(
+        '', // Título vazio porque estamos usando `titleText` personalizado
+        '',
+        colorText: Colors.white,
+        backgroundColor: Colors.green,
+        snackPosition: SnackPosition.BOTTOM,
+        borderRadius: 20,
+        margin: EdgeInsets.all(15),
+        icon: Icon(Icons.check_circle, color: Colors.white),
+        shouldIconPulse: true,
+        barBlur: 20,
+        isDismissible: true,
+        duration: Duration(seconds: 3),
+        forwardAnimationCurve: Curves.easeOutBack,
+        reverseAnimationCurve: Curves.easeInBack,
+        titleText: Text(
+          'Sucesso',
+          style: TextStyle(
+            fontSize: 20, // Tamanho da fonte do título
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        messageText: Text(
+          'Produto atualizado com sucesso',
+          style: TextStyle(
+            fontSize: 16, // Tamanho da fonte da mensagem
+            color: Colors.white,
+          ),
+        ),
+      );
     } catch (e) {
-      Get.snackbar('Erro', e.toString(), colorText: Colors.red);
+      avisoErroPadrao(e);
     }
   }
 
@@ -353,7 +414,7 @@ buscaPorNome() async{
       await alimentacaoCollection.doc(id).delete();
       alimentacaoList.removeWhere((alimentacao) => alimentacao.id == id); // Remover da lista local
     } catch (e) {
-      Get.snackbar('Error', e.toString(), colorText: Colors.red);
+      avisoErroPadrao(e);
     }
   }
 
@@ -365,3 +426,37 @@ buscaPorNome() async{
     update();
   }
 }
+
+ avisoErroPadrao(e){
+   Get.snackbar(
+       '',
+       '',
+       colorText: Colors.white, // Cor do texto
+       backgroundColor: Colors.red, // Cor de fundo
+       snackPosition: SnackPosition.BOTTOM, // Posição do snackbar (TOP ou BOTTOM)
+       borderRadius: 20, // Raio da borda
+       margin: EdgeInsets.all(15), // Margem ao redor do snackbar
+       icon: Icon(Icons.error, color: Colors.white), // Ícone
+       shouldIconPulse: true, // Animação de pulsar do ícone
+       barBlur: 20, // Desfocagem do fundo da barra
+       isDismissible: true, // Se o snackbar pode ser dispensado
+       duration: Duration(seconds: 3), // Duração do snackbar
+       forwardAnimationCurve: Curves.easeOutBack, // Curva de animação de entrada
+       reverseAnimationCurve: Curves.easeInBack, // Curva de animação de saída
+       titleText: Text(
+         'Erro',
+         style: TextStyle(
+           fontSize: 20, // Tamanho da fonte do título
+           fontWeight: FontWeight.bold,
+           color: Colors.white,
+         ),
+       ),
+       messageText: Text(
+           e.toString(),
+           style: TextStyle(
+             fontSize: 16, // Tamanho da fonte da mensagem
+             color: Colors.white,
+           )
+       )
+   );
+ }

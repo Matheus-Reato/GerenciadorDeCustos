@@ -8,29 +8,29 @@ import '../model/alimentacao/alimentacao.dart';
 import '../model/lazer/lazer.dart';
 import '../model/transporte/transporte.dart';
 
-class TransporteController extends GetxController{
+class LazerController extends GetxController{
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  late CollectionReference transporteCollection;
+  late CollectionReference lazerCollection;
 
-  List<Transporte> transporteList = [];
+  List<Lazer> lazerList = [];
 
-  List<Transporte> transporteListOriginal = [];
+  List<Lazer> lazerListOriginal = [];
 
-  Transporte? transporteAtual;
+  Lazer? lazerAtual;
 
-  TextEditingController transporteNomeCtrl = TextEditingController();
-  TextEditingController transportePrecoCtrl = TextEditingController();
-  TextEditingController transporteDataCtrl = TextEditingController();
+  TextEditingController lazerNomeCtrl = TextEditingController();
+  TextEditingController lazerPrecoCtrl = TextEditingController();
+  TextEditingController lazerDataCtrl = TextEditingController();
 
-  TextEditingController transporteSearchCtrl = TextEditingController();
+  TextEditingController lazerSearchCtrl = TextEditingController();
 
   TextEditingController dateController = TextEditingController();
 
-  int? selectedMonthTransporte;
+  int? selectedMonthLazer;
 
   var mesPadrao = 'Todos'.obs;
 
-  void setSelectedMonthTransporte(String? monthName) {
+  void setSelectedMonthLazer(String? monthName) {
     mesPadrao.value = monthName ?? 'Todos';
 
     final Map<String, int> monthsMap = {
@@ -50,9 +50,9 @@ class TransporteController extends GetxController{
     };
 
 
-    selectedMonthTransporte = monthsMap[monthName];
+    selectedMonthLazer = monthsMap[monthName];
 
-    fetchTransporte();
+    fetchLazer();
   }
 
   @override
@@ -61,17 +61,17 @@ class TransporteController extends GetxController{
 
     FirebaseAuth auth = FirebaseAuth.instance;
     String _userId = auth.currentUser!.uid;
-    transporteCollection = FirebaseFirestore.instance.collection('usuario').doc(_userId).collection('transporte');
+    lazerCollection = FirebaseFirestore.instance.collection('usuario').doc(_userId).collection('lazer');
 
-    await fetchTransporte();
+    await fetchLazer();
     super.onInit();
   }
 
-  addTransporte(){
+  addLazer(){
     try {
       FirebaseAuth auth = FirebaseAuth.instance;
       String _userId = auth.currentUser!.uid;
-      transporteCollection = FirebaseFirestore.instance.collection('usuario').doc(_userId).collection('transporte');
+      lazerCollection = FirebaseFirestore.instance.collection('usuario').doc(_userId).collection('lazer');
 
       String dateString = dateController.text;
       DateTime parsedDate = DateTime.parse(dateString);
@@ -79,18 +79,18 @@ class TransporteController extends GetxController{
       int year = parsedDate.year;
 
 
-      DocumentReference doc = transporteCollection.doc();
-      Transporte transporte = Transporte(
+      DocumentReference doc = lazerCollection.doc();
+      Lazer lazer = Lazer(
           id: doc.id,
           data: dateController.text,
-          nome: transporteNomeCtrl.text,
-          preco: double.tryParse(transportePrecoCtrl.text.replaceAll(',', '.')),
+          nome: lazerNomeCtrl.text,
+          preco: double.tryParse(lazerPrecoCtrl.text.replaceAll(',', '.')),
           mesAtual: month,
           anoAtual: year
       );
 
-      final transporteJson = transporte.toJson();
-      doc.set(transporteJson);
+      final lazerJson = lazer.toJson();
+      doc.set(lazerJson);
 
       Get.snackbar(
         '', // Título vazio porque estamos usando `titleText` personalizado
@@ -132,35 +132,35 @@ class TransporteController extends GetxController{
     }
   }
 
-  Future<void> fetchTransporte() async {
+  Future<void> fetchLazer() async {
     try {
       FirebaseAuth auth = FirebaseAuth.instance;
       String _userId = auth.currentUser!.uid;
       final userDocRef = firestore.collection('usuario').doc(_userId);
-      QuerySnapshot transporteSnapshot;
+      QuerySnapshot lazerSnapshot;
 
       DateTime now = DateTime.now();
       int currentYear = now.year;
 
-      if (selectedMonthTransporte == 0 || selectedMonthTransporte == null) {
-        transporteSnapshot = await userDocRef.collection('transporte')
+      if (selectedMonthLazer == 0 || selectedMonthLazer == null) {
+        lazerSnapshot = await userDocRef.collection('lazer')
             .orderBy('data', descending: true).get();
       } else {
-        transporteSnapshot = await userDocRef.collection('transporte')
-            .where('mesAtual', isEqualTo: selectedMonthTransporte)
+        lazerSnapshot = await userDocRef.collection('lazer')
+            .where('mesAtual', isEqualTo: selectedMonthLazer)
             .where('anoAtual', isEqualTo: currentYear)
             .orderBy('data', descending: true).get();
       }
 
-      final List<Transporte> retrievedTransporte = transporteSnapshot.docs
-          .map((doc) => Transporte.fromJson(doc.data() as Map<String, dynamic>))
+      final List<Lazer> retrievedLazer = lazerSnapshot.docs
+          .map((doc) => Lazer.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
 
-      transporteList.clear();
-      transporteList.addAll(retrievedTransporte);
+      lazerList.clear();
+      lazerList.addAll(retrievedLazer);
 
-      transporteListOriginal.clear();
-      transporteListOriginal.addAll(retrievedTransporte);
+      lazerListOriginal.clear();
+      lazerListOriginal.addAll(retrievedLazer);
     } catch (e) {
       avisoErroPadrao(e);
     } finally {
@@ -168,17 +168,17 @@ class TransporteController extends GetxController{
     }
   }
 
-  fetchTransporteDetalhes(String transporteId) async {
+  fetchLazerDetalhes(String lazerId) async {
     try {
       FirebaseAuth auth = FirebaseAuth.instance;
       String _userId = auth.currentUser!.uid;
 
       final userDocRef = firestore.collection('usuario').doc(_userId);
-      final transporteDoc = await userDocRef.collection('transporte').doc(transporteId).get();
+      final lazerDoc = await userDocRef.collection('lazer').doc(lazerId).get();
 
       // Transformar o documento em um objeto Alimentacao e atualizar o estado
-      final transporteDetalhes = Transporte.fromJson(transporteDoc.data() as Map<String, dynamic>);
-      transporteAtual = transporteDetalhes;
+      final lazerDetalhes = Lazer.fromJson(lazerDoc.data() as Map<String, dynamic>);
+      lazerAtual = lazerDetalhes;
 
       update(); // Notificar que o estado foi atualizado, o que faz com que o widget seja reconstruído
 
@@ -193,24 +193,24 @@ class TransporteController extends GetxController{
     FirebaseAuth auth = FirebaseAuth.instance;
     String _userId = auth.currentUser!.uid;
     final userDocRef = firestore.collection('usuario').doc(_userId);
-    final QuerySnapshot transporteSnapshot = await userDocRef.collection('transporte').get();
+    final QuerySnapshot lazerSnapshot = await userDocRef.collection('lazer').get();
 
     DateTime now = DateTime.now();
     int currentYear = now.year;
 
-    final List<Transporte> retrievedTransporte = transporteSnapshot.docs.map((doc) => Transporte.fromJson(doc.data() as Map<String, dynamic>)).toList();
+    final List<Lazer> retrievedLazer = lazerSnapshot.docs.map((doc) => Lazer.fromJson(doc.data() as Map<String, dynamic>)).toList();
 
-    transporteList.clear();
-    transporteList.assignAll(retrievedTransporte);
+    lazerList.clear();
+    lazerList.assignAll(retrievedLazer);
 
-    if(selectedMonthTransporte == null || selectedMonthTransporte == 0){
-      for(int i = 0; i < transporteList.length; i++){
-        gastoTotal += transporteList[i].preco!;
+    if(selectedMonthLazer == null || selectedMonthLazer == 0){
+      for(int i = 0; i < lazerList.length; i++){
+        gastoTotal += lazerList[i].preco!;
       }
     } else{
-      for(int i = 0; i < transporteList.length; i++){
-        if(transporteList[i].mesAtual == selectedMonthTransporte && transporteList[i].anoAtual == currentYear){
-          gastoTotal += transporteList[i].preco!;
+      for(int i = 0; i < lazerList.length; i++){
+        if(lazerList[i].mesAtual == selectedMonthLazer && lazerList[i].anoAtual == currentYear){
+          gastoTotal += lazerList[i].preco!;
         }
       }
     }
@@ -223,48 +223,48 @@ class TransporteController extends GetxController{
     String _userId = auth.currentUser!.uid;
 
     final userDocRef = firestore.collection('usuario').doc(_userId);
-    final QuerySnapshot transporteSnapshot = await userDocRef.collection('transporte').orderBy('nome').get();
+    final QuerySnapshot lazerSnapshot = await userDocRef.collection('lazer').orderBy('nome').get();
 
-    final List<Transporte> retrievedTransporte = transporteSnapshot.docs.map((doc) => Transporte.fromJson(doc.data() as Map<String, dynamic>)).toList();
+    final List<Lazer> retrievedLazer = lazerSnapshot.docs.map((doc) => Lazer.fromJson(doc.data() as Map<String, dynamic>)).toList();
 
 
-    transporteList.clear();
-    transporteList.assignAll(retrievedTransporte);
+    lazerList.clear();
+    lazerList.assignAll(retrievedLazer);
 
-    String termoProcurado = transporteSearchCtrl.text.toLowerCase();
+    String termoProcurado = lazerSearchCtrl.text.toLowerCase();
 
-    List<Transporte> filtradoPorNome = [];
-    for(int i = 0; i< transporteList.length; i++){
+    List<Lazer> filtradoPorNome = [];
+    for(int i = 0; i< lazerList.length; i++){
 
-      String? nome = transporteList[i].nome?.toLowerCase();
+      String? nome = lazerList[i].nome?.toLowerCase();
       nome?.contains(termoProcurado);
-      filtradoPorNome.assign(nome as Transporte);
+      filtradoPorNome.assign(nome as Lazer);
     }
   }
 
-  updateTransporte(String? id) async {
+  updateLazer(String? id) async {
     try {
       String dateString = dateController.text;
       DateTime parsedDate = DateTime.parse(dateString);
       int month = parsedDate.month;
       int year = parsedDate.year;
 
-      DocumentReference doc = transporteCollection.doc(id);
-      Transporte transporte = Transporte(
+      DocumentReference doc = lazerCollection.doc(id);
+      Lazer lazer = Lazer(
           id: doc.id,
           data: dateController.text,
-          nome: transporteNomeCtrl.text,
-          preco: double.tryParse(transportePrecoCtrl.text.replaceAll(',', '.')),
+          nome: lazerNomeCtrl.text,
+          preco: double.tryParse(lazerPrecoCtrl.text.replaceAll(',', '.')),
           mesAtual: month,
           anoAtual: year
       );
 
-      final transporteJson = transporte.toJson();
-      await doc.update(transporteJson);
+      final lazerJson = lazer.toJson();
+      await doc.update(lazerJson);
 
       // Após a atualização, reordena a lista
-      final ctrl = Get.find<TransporteController>();
-      ctrl.transporteList.sort((a, b) => (b.data ?? '').compareTo(a.data ?? ''));
+      final ctrl = Get.find<LazerController>();
+      ctrl.lazerList.sort((a, b) => (b.data ?? '').compareTo(a.data ?? ''));
 
       Get.snackbar(
         '', // Título vazio porque estamos usando `titleText` personalizado
@@ -303,10 +303,10 @@ class TransporteController extends GetxController{
   }
 
 
-  Future<void> deleteTransporte(String id) async {
+  Future<void> deleteLazer(String id) async {
     try {
-      await transporteCollection.doc(id).delete();
-      transporteList.removeWhere((transporte) => transporte.id == id); // Remover da lista local
+      await lazerCollection.doc(id).delete();
+      lazerList.removeWhere((lazer) => lazer.id == id); // Remover da lista local
     } catch (e) {
       avisoErroPadrao(e);
     }
@@ -314,8 +314,8 @@ class TransporteController extends GetxController{
 
   setValuesDefault(){
     dateController.clear();
-    transporteNomeCtrl.clear();
-    transportePrecoCtrl.clear();
+    lazerNomeCtrl.clear();
+    lazerPrecoCtrl.clear();
 
     update();
   }

@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import '../controller/alimentacao_controller.dart';
 import '../widgets/DropdownButtonAno.dart';
 import '../widgets/DropdownButtonMes.dart';
+import 'lazer_page.dart';
 import 'login.dart';
 
 class HomePage extends StatefulWidget {
@@ -37,10 +38,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   _deslogarUsuario() async {
+    Get.delete<AlimentacaoController>();
+
     FirebaseAuth auth = FirebaseAuth.instance;
     await auth.signOut().then((value) => {
       Get.offAll(Login())
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Get.put(AlimentacaoController());
   }
 
   @override
@@ -196,7 +205,9 @@ class _HomePageState extends State<HomePage> {
                     fixedSize: Size.fromWidth(310),
                     backgroundColor: Color.fromRGBO(158, 197, 171, 1.0),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(LazerPage());
+                  },
                   icon: Icon(
                     Icons.beach_access,
                     color: Colors.black,

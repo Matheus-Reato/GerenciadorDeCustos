@@ -7,6 +7,7 @@ import 'package:gerenciador_de_custos/pages/login.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 
+import 'controller/lazer_controller.dart';
 import 'firebase_options.dart';
 
 void main() async{
@@ -18,6 +19,7 @@ void main() async{
 
   Get.put(AlimentacaoController());
   Get.put(TransporteController());
+  Get.put(LazerController());
 
   runApp(const MyApp());
 }

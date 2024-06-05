@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:gerenciador_de_custos/pages/transporte_page.dart';
 import 'package:get/get.dart';
-import '../controller/transporte_controller.dart';
+import '../controller/lazer_controller.dart';
+import 'lazer_page.dart';
 
-class UpdateTransporte extends StatefulWidget {
-  final String transporteId;
+class UpdateLazer extends StatefulWidget {
+  final String lazerId;
 
 
-  UpdateTransporte({super.key, required this.transporteId});
+  UpdateLazer({super.key, required this.lazerId});
 
   @override
-  State<UpdateTransporte> createState() => _UpdateTransporteState();
+  State<UpdateLazer> createState() => _UpdateLazerState();
 }
 
-class _UpdateTransporteState extends State<UpdateTransporte> {
+class _UpdateLazerState extends State<UpdateLazer> {
 
-  final TransporteController ctrl = Get.put(TransporteController());
+  final LazerController ctrl = Get.put(LazerController());
 
   @override
   void initState() {
     super.initState();
     // Carregar detalhes do documento usando o ID recebido
-    ctrl.fetchTransporteDetalhes(widget.transporteId).then((_) {
+    ctrl.fetchLazerDetalhes(widget.lazerId).then((_) {
       // Preencher os controladores de texto com os detalhes da alimentação
-      ctrl.dateController.text = ctrl.transporteAtual?.data ?? '';
-      ctrl.transporteNomeCtrl.text = ctrl.transporteAtual?.nome ?? '';
-      ctrl.transportePrecoCtrl.text = ctrl.transporteAtual?.preco.toString() ?? '';
+      ctrl.dateController.text = ctrl.lazerAtual?.data ?? '';
+      ctrl.lazerNomeCtrl.text = ctrl.lazerAtual?.nome ?? '';
+      ctrl.lazerPrecoCtrl.text = ctrl.lazerAtual?.preco.toString() ?? '';
       setState(() {}); // Garantir que o widget seja reconstruído após atribuir os valores
     });
   }
@@ -34,7 +34,7 @@ class _UpdateTransporteState extends State<UpdateTransporte> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<TransporteController>(builder: (ctrl) {
+    return GetBuilder<LazerController>(builder: (ctrl) {
 
       Future<void> _selectDate(BuildContext context) async {
         final DateTime? picked = await showDatePicker(
@@ -97,7 +97,7 @@ class _UpdateTransporteState extends State<UpdateTransporte> {
 
                 SizedBox(height: 30,),
                 TextFormField(
-                  controller: ctrl.transporteNomeCtrl,
+                  controller: ctrl.lazerNomeCtrl,
                   decoration: InputDecoration(
                     //icon: Icon(Icons.calendar_month),
                       border: OutlineInputBorder(),
@@ -107,7 +107,7 @@ class _UpdateTransporteState extends State<UpdateTransporte> {
                 ),
                 SizedBox(height: 30,),
                 TextFormField(
-                  controller: ctrl.transportePrecoCtrl,
+                  controller: ctrl.lazerPrecoCtrl,
                   decoration: InputDecoration(
                     //icon: Icon(Icons.calendar_month),
                       border: OutlineInputBorder(),
@@ -120,7 +120,7 @@ class _UpdateTransporteState extends State<UpdateTransporte> {
                   backgroundColor: Color.fromRGBO(50, 116, 109, 1.0),
                   foregroundColor: Colors.black,
                 ), onPressed: () async {
-                  if(ctrl.transporteNomeCtrl.text == '' || ctrl.transportePrecoCtrl.text == '' || ctrl.dateController.text == ''){
+                  if(ctrl.lazerNomeCtrl.text == '' || ctrl.lazerPrecoCtrl.text == '' || ctrl.dateController.text == ''){
                     Get.snackbar(
                         '',
                         '',
@@ -153,9 +153,9 @@ class _UpdateTransporteState extends State<UpdateTransporte> {
                         )
                     );
                   } else {
-                    await ctrl.updateTransporte(widget.transporteId);
-                    await ctrl.fetchTransporte();
-                    Get.off(TransportePage());
+                    await ctrl.updateLazer(widget.lazerId);
+                    await ctrl.fetchLazer();
+                    Get.off(LazerPage());
                   }
                 }, child: Text('Atualizar', style: TextStyle(fontSize: 24, color: Colors.white),))
               ],

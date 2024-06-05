@@ -109,7 +109,37 @@ class _AddAlimentacaoState extends State<AddAlimentacao> {
                   ),
                   onPressed: () async {
                     if(ctrl.alimentacaoNomeCtrl.text == '' || ctrl.alimentacaoPrecoCtrl.text == '' || ctrl.dateController.text == ''){
-                    Get.snackbar('Error', 'Campos obrigatórios em branco', colorText: Colors.red);
+                      Get.snackbar(
+                          '',
+                          '',
+                          colorText: Colors.white, // Cor do texto
+                          backgroundColor: Colors.red, // Cor de fundo
+                          snackPosition: SnackPosition.BOTTOM, // Posição do snackbar (TOP ou BOTTOM)
+                          borderRadius: 20, // Raio da borda
+                          margin: EdgeInsets.all(15), // Margem ao redor do snackbar
+                          icon: Icon(Icons.error, color: Colors.white), // Ícone
+                          shouldIconPulse: true, // Animação de pulsar do ícone
+                          barBlur: 20, // Desfocagem do fundo da barra
+                          isDismissible: true, // Se o snackbar pode ser dispensado
+                          duration: Duration(seconds: 3), // Duração do snackbar
+                          forwardAnimationCurve: Curves.easeOutBack, // Curva de animação de entrada
+                          reverseAnimationCurve: Curves.easeInBack, // Curva de animação de saída
+                          titleText: Text(
+                            'Erro',
+                            style: TextStyle(
+                              fontSize: 20, // Tamanho da fonte do título
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          messageText: Text(
+                              'Campos obrigatórios em branco',
+                              style: TextStyle(
+                                fontSize: 16, // Tamanho da fonte da mensagem
+                                color: Colors.white,
+                              )
+                          )
+                      );
                     } else {
                       await ctrl.addAlimentacao();
                       await ctrl.fetchAlimentacao();
