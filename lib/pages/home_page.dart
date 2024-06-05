@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_custos/pages/transporte_page.dart';
 import 'package:gerenciador_de_custos/widgets/DropdownButtonModalidade.dart';
@@ -7,6 +8,7 @@ import 'package:gerenciador_de_custos/pages/alimentacao_page.dart';
 import 'package:get/get.dart';
 
 import '../controller/alimentacao_controller.dart';
+import '../controller/homePage_controller.dart';
 import '../widgets/DropdownButtonAno.dart';
 import '../widgets/DropdownButtonMes.dart';
 import 'lazer_page.dart';
@@ -38,7 +40,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _deslogarUsuario() async {
-    Get.delete<AlimentacaoController>();
+    Get.delete<HomePageController>();
 
     FirebaseAuth auth = FirebaseAuth.instance;
     await auth.signOut().then((value) => {
@@ -49,12 +51,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Get.put(AlimentacaoController());
+    Get.put(HomePageController());
   }
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AlimentacaoController>(builder: (ctrl) {
+    return GetBuilder<HomePageController>(builder: (ctrl) {
       // Obter a data atual
       DateTime now = DateTime.now();
 
@@ -113,15 +115,17 @@ class _HomePageState extends State<HomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                    FutureBuilder<dynamic>(
-                      future: _pesquisaNomeUsuario(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return Text('Erro: ${snapshot.error}');
-                        } else {
-                          return Text(snapshot.data ?? 'Nome não encontrado', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),); // Mostra o nome ou uma mensagem padrão se o nome não for encontrado
-                        }
-                      },
+                    Flexible(
+                      child: FutureBuilder<dynamic>(
+                        future: _pesquisaNomeUsuario(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('Erro: ${snapshot.error}');
+                          } else {
+                            return Text(snapshot.data ?? '', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white, ),); // Mostra o nome ou uma mensagem padrão se o nome não for encontrado
+                          }
+                        },
+                      ),
                     ),
 
                   IconButton(

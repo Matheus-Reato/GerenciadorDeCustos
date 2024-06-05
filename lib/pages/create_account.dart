@@ -19,93 +19,229 @@ class _CreateAccountState extends State<CreateAccount> {
   TextEditingController _password = TextEditingController();
 
   _criarUsuario() async {
-    //instancias
+    // Instâncias
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseFirestore db = FirebaseFirestore.instance;
 
-    if (_name.text == '' || _email.text == '' || _password.text == '') {
+    if (_name.text.isEmpty || _email.text.isEmpty || _password.text.isEmpty) {
       Get.snackbar(
-          '',
-          '',
-          colorText: Colors.white,
-          backgroundColor: Colors.red,
-          snackPosition: SnackPosition.BOTTOM,
-          borderRadius: 20,
-          margin: EdgeInsets.all(15),
-          icon: Icon(Icons.error, color: Colors.white),
-          shouldIconPulse: true,
-          barBlur: 20,
-          isDismissible: true,
-          duration: Duration(seconds: 3),
-          forwardAnimationCurve: Curves.easeOutBack,
-          reverseAnimationCurve: Curves.easeInBack,
-          titleText: Text(
-            'Erro',
-            style: TextStyle(
-              fontSize: 20, // Tamanho da fonte do título
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+        '',
+        '',
+        colorText: Colors.white,
+        backgroundColor: Colors.red,
+        snackPosition: SnackPosition.BOTTOM,
+        borderRadius: 20,
+        margin: EdgeInsets.all(15),
+        icon: Icon(Icons.error, color: Colors.white),
+        shouldIconPulse: true,
+        barBlur: 20,
+        isDismissible: true,
+        duration: Duration(seconds: 3),
+        forwardAnimationCurve: Curves.easeOutBack,
+        reverseAnimationCurve: Curves.easeInBack,
+        titleText: Text(
+          'Erro',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
-          messageText: Text(
-              'Campos obrigatórios em branco',
-              style: TextStyle(
-                fontSize: 16, // Tamanho da fonte da mensagem
-                color: Colors.white,
-              )
-          )
-      );
-    }
-
-    if (_password.text.length < 6) {
-      Get.snackbar(
-          '',
-          '',
-          colorText: Colors.white,
-          backgroundColor: Colors.red,
-          snackPosition: SnackPosition.BOTTOM,
-          borderRadius: 20,
-          margin: EdgeInsets.all(15),
-          icon: Icon(Icons.error, color: Colors.white),
-          shouldIconPulse: true,
-          barBlur: 20,
-          isDismissible: true,
-          duration: Duration(seconds: 3),
-          forwardAnimationCurve: Curves.easeOutBack,
-          reverseAnimationCurve: Curves.easeInBack,
-          titleText: Text(
-            'Erro',
-            style: TextStyle(
-              fontSize: 20, // Tamanho da fonte do título
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+        ),
+        messageText: Text(
+          'Campos obrigatórios em branco',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.white,
           ),
-          messageText: Text(
-              'Senha deve ter 6 ou mais caracteres',
-              style: TextStyle(
-                fontSize: 16, // Tamanho da fonte da mensagem
-                color: Colors.white,
-              )
-          )
+        ),
       );
+      return;
     } else {
-      Map<String, String> dadosUser = {
-        "nome": _name.text,
-        "email": _email.text,
-      };
+      try {
+        UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+          email: _email.text,
+          password: _password.text,
+        );
 
-        auth
-            .createUserWithEmailAndPassword(
-            email: _email.text, password: _password.text)
-            .then((value) async =>
-        {
-          await db.collection("usuario").doc(value.user!.uid).set(dadosUser),
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-                  (route) => false)
-        });
+        Map<String, String> dadosUser = {
+          "nome": _name.text,
+          "email": _email.text,
+        };
+
+        await db.collection("usuario").doc(userCredential.user!.uid).set(dadosUser);
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+              (route) => false,
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'email-already-in-use') {
+          Get.snackbar(
+            '',
+            '',
+            colorText: Colors.white,
+            backgroundColor: Colors.red,
+            snackPosition: SnackPosition.BOTTOM,
+            borderRadius: 20,
+            margin: EdgeInsets.all(15),
+            icon: Icon(Icons.error, color: Colors.white),
+            shouldIconPulse: true,
+            barBlur: 20,
+            isDismissible: true,
+            duration: Duration(seconds: 3),
+            forwardAnimationCurve: Curves.easeOutBack,
+            reverseAnimationCurve: Curves.easeInBack,
+            titleText: Text(
+              'Erro',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            messageText: Text(
+              'Este email já está em uso',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              ),
+            ),
+          );
+        }
+        else if(e.code == 'invalid-email'){
+          Get.snackbar(
+            '',
+            '',
+            colorText: Colors.white,
+            backgroundColor: Colors.red,
+            snackPosition: SnackPosition.BOTTOM,
+            borderRadius: 20,
+            margin: EdgeInsets.all(15),
+            icon: Icon(Icons.error, color: Colors.white),
+            shouldIconPulse: true,
+            barBlur: 20,
+            isDismissible: true,
+            duration: Duration(seconds: 3),
+            forwardAnimationCurve: Curves.easeOutBack,
+            reverseAnimationCurve: Curves.easeInBack,
+            titleText: Text(
+              'Erro',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            messageText: Text(
+              'Email não está no formato correto',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              ),
+            ),
+          );
+        }
+
+        else if(e.code == 'weak-password'){
+          Get.snackbar(
+            '',
+            '',
+            colorText: Colors.white,
+            backgroundColor: Colors.red,
+            snackPosition: SnackPosition.BOTTOM,
+            borderRadius: 20,
+            margin: EdgeInsets.all(15),
+            icon: Icon(Icons.error, color: Colors.white),
+            shouldIconPulse: true,
+            barBlur: 20,
+            isDismissible: true,
+            duration: Duration(seconds: 3),
+            forwardAnimationCurve: Curves.easeOutBack,
+            reverseAnimationCurve: Curves.easeInBack,
+            titleText: Text(
+              'Erro',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            messageText: Text(
+              'Senha deve possuir 6 ou mais caracteres',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              ),
+            ),
+          );
+      }
+        else {
+          Get.snackbar(
+            '',
+            '',
+            colorText: Colors.white,
+            backgroundColor: Colors.red,
+            snackPosition: SnackPosition.BOTTOM,
+            borderRadius: 20,
+            margin: EdgeInsets.all(15),
+            icon: Icon(Icons.error, color: Colors.white),
+            shouldIconPulse: true,
+            barBlur: 20,
+            isDismissible: true,
+            duration: Duration(seconds: 3),
+            forwardAnimationCurve: Curves.easeOutBack,
+            reverseAnimationCurve: Curves.easeInBack,
+            titleText: Text(
+              'Erro',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            messageText: Text(
+              'Ocorreu um erro ao criar a conta',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              ),
+            ),
+          );
+        }
+      } catch (e) {
+        Get.snackbar(
+          '',
+          '',
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
+          snackPosition: SnackPosition.BOTTOM,
+          borderRadius: 20,
+          margin: EdgeInsets.all(15),
+          icon: Icon(Icons.error, color: Colors.white),
+          shouldIconPulse: true,
+          barBlur: 20,
+          isDismissible: true,
+          duration: Duration(seconds: 3),
+          forwardAnimationCurve: Curves.easeOutBack,
+          reverseAnimationCurve: Curves.easeInBack,
+          titleText: Text(
+            'Erro',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          messageText: Text(
+            'Ocorreu um erro desconhecido',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+            ),
+          ),
+        );
+      }
     }
   }
   @override

@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gerenciador_de_custos/pages/home_page.dart';
 import 'package:gerenciador_de_custos/pages/create_account.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -14,15 +16,50 @@ class _LoginState extends State<Login> {
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
 
-  _login() {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    auth.signInWithEmailAndPassword(email: _email.text, password: _password.text)
-        .then((value) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-              (route) => false);
-    });
+  _login() async{
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      await auth.signInWithEmailAndPassword(
+          email: _email.text, password: _password.text)
+          .then((value) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+                (route) => false);
+      });
+    } catch (e) {
+      Get.snackbar(
+          '',
+          '',
+          colorText: Colors.white, // Cor do texto
+          backgroundColor: Colors.red, // Cor de fundo
+          snackPosition: SnackPosition.BOTTOM, // Posição do snackbar (TOP ou BOTTOM)
+          borderRadius: 20, // Raio da borda
+          margin: EdgeInsets.all(15), // Margem ao redor do snackbar
+          icon: Icon(Icons.error, color: Colors.white), // Ícone
+          shouldIconPulse: true, // Animação de pulsar do ícone
+          barBlur: 20, // Desfocagem do fundo da barra
+          isDismissible: true, // Se o snackbar pode ser dispensado
+          duration: Duration(seconds: 3), // Duração do snackbar
+          forwardAnimationCurve: Curves.easeOutBack, // Curva de animação de entrada
+          reverseAnimationCurve: Curves.easeInBack, // Curva de animação de saída
+          titleText: Text(
+            'Erro',
+            style: TextStyle(
+              fontSize: 20, // Tamanho da fonte do título
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          messageText: Text(
+              'Email ou senha inválido',
+              style: TextStyle(
+                fontSize: 16, // Tamanho da fonte da mensagem
+                color: Colors.white,
+              )
+          )
+      );
+    }
   }
 
   @override
