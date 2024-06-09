@@ -3,6 +3,7 @@ import 'package:gerenciador_de_custos/pages/transporte_add_page.dart';
 import 'package:gerenciador_de_custos/pages/transporte_update_page.dart';
 import 'package:gerenciador_de_custos/widgets/DropdownButtonAlimentacao.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../controller/lazer_controller.dart';
 import '../controller/transporte_controller.dart';
@@ -38,6 +39,11 @@ class _LazerPageState extends State<LazerPage> {
         });
       });
     });
+  }
+
+  String convertDateFormat(String date) {
+    DateTime parsedDate = DateTime.parse(date);
+    return DateFormat('dd-MM-yyyy').format(parsedDate);
   }
 
   void _applySearch(LazerController ctrl) {
@@ -232,7 +238,7 @@ class _LazerPageState extends State<LazerPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text('R\$ ${lazer.preco?.toStringAsFixed(2) ?? 0}', style: TextStyle(fontWeight: FontWeight.w500),),
-                                Text(lazer.data ?? '', style: TextStyle(fontWeight: FontWeight.w500)),
+                                Text(convertDateFormat(lazer.data ?? ''), style: TextStyle(fontWeight: FontWeight.w500)),
                               ],
                             ),
                           ],

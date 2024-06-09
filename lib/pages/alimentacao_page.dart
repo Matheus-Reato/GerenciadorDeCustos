@@ -4,6 +4,7 @@ import 'package:gerenciador_de_custos/pages/alimentacao_add_page.dart';
 import 'package:gerenciador_de_custos/pages/alimentacao_update_page.dart';
 import 'package:gerenciador_de_custos/widgets/DropdownButtonAlimentacao.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../model/alimentacao/alimentacao.dart';
 
@@ -34,6 +35,12 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
         });
       });
     });
+  }
+
+  // Função para converter a data de yyyy-mm-dd para dd-mm-yyyy
+  String convertDateFormat(String date) {
+    DateTime parsedDate = DateTime.parse(date);
+    return DateFormat('dd-MM-yyyy').format(parsedDate);
   }
 
   void _applySearch(AlimentacaoController ctrl) {
@@ -230,7 +237,7 @@ class _AlimentacaoPageState extends State<AlimentacaoPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text('R\$ ${alimentacao.preco?.toStringAsFixed(2) ?? 0}', style: TextStyle(fontWeight: FontWeight.w500),),
-                                Text(alimentacao.data ?? '', style: TextStyle(fontWeight: FontWeight.w500)),
+                                Text(convertDateFormat(alimentacao.data ?? ''), style: TextStyle(fontWeight: FontWeight.w500)),
                               ],
                             ),
                           ],

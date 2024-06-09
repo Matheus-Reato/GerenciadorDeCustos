@@ -3,6 +3,7 @@ import 'package:gerenciador_de_custos/pages/transporte_add_page.dart';
 import 'package:gerenciador_de_custos/pages/transporte_update_page.dart';
 import 'package:gerenciador_de_custos/widgets/DropdownButtonAlimentacao.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../controller/transporte_controller.dart';
 import '../model/transporte/transporte.dart';
@@ -34,6 +35,11 @@ class _TransportePageState extends State<TransportePage> {
         });
       });
     });
+  }
+
+  String convertDateFormat(String date) {
+    DateTime parsedDate = DateTime.parse(date);
+    return DateFormat('dd-MM-yyyy').format(parsedDate);
   }
 
   void _applySearch(TransporteController ctrl) {
@@ -228,7 +234,7 @@ class _TransportePageState extends State<TransportePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text('R\$ ${transporte.preco?.toStringAsFixed(2) ?? 0}', style: TextStyle(fontWeight: FontWeight.w500),),
-                                Text(transporte.data ?? '', style: TextStyle(fontWeight: FontWeight.w500)),
+                                Text(convertDateFormat(transporte.data ?? ''), style: TextStyle(fontWeight: FontWeight.w500)),
                               ],
                             ),
                           ],
